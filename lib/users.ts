@@ -104,6 +104,7 @@ export const USERS: Record<string, User> = {
     id: "charl",
     name: "Charl",
     email: "chapmancharl28@gmail.com",
+    oidcEmail: "charl@nexamesh.ai",
     phone: "+27711488390",
     role: "operator",
     description: "Tasks, assets, time tracking, vehicles coming soon",
