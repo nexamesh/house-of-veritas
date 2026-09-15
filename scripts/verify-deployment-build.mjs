@@ -1,4 +1,4 @@
-const DEFAULT_ATTEMPTS = 10
+const DEFAULT_ATTEMPTS = 20
 const DEFAULT_DELAY_MS = 15_000
 
 function parsePositiveInteger(value, name) {
