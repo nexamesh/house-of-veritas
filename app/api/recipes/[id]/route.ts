@@ -2,7 +2,9 @@ import { NextResponse } from "next/server"
 import {
   isRecipeAudienceMatch,
   KNOWN_RECIPE_STATUSES,
+  normalizeAlternativeMethods,
   normalizeRecipeAudienceUserIds,
+  validateAlternativeMethods,
   type RecipeCreatePayload,
   type RecipeRecord,
 } from "@/lib/recipes"
@@ -78,6 +80,10 @@ function buildRecipePayload(
     image: (updates as RecipeCreatePayload).image ?? base.image,
     ingredients,
     steps,
+    // Omitted (or not an array) keeps the existing methods; an explicit [] clears them.
+    alternativeMethods: Array.isArray(updates.alternativeMethods)
+      ? normalizeAlternativeMethods(updates.alternativeMethods, base.id)
+      : base.alternativeMethods,
     updatedAt: new Date().toISOString(),
   }
 }
@@ -93,7 +99,7 @@ function validateRecipe(recipe: RecipeRecord): string | null {
   if (recipe.steps.some((step) => !step.instructionEn || !step.instructionAf)) {
     return "All steps must include English and Afrikaans instructions"
   }
-  return null
+  return validateAlternativeMethods(recipe.alternativeMethods ?? [])
 }
 
 async function ensureEditableRecipe(

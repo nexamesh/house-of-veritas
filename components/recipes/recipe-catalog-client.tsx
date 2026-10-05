@@ -5,6 +5,7 @@ import { apiFetch } from "@/lib/api-client"
 import { PublishedRecipeGuidance } from "@/components/recipes/published-recipe-guidance"
 import { RecipeGuidanceWorkspace } from "@/components/recipes/recipe-guidance-workspace"
 import {
+  type RecipeAlternativeMethod,
   type RecipeIngredient,
   type RecipeRecord,
   type RecipeRatingSummary,
@@ -107,6 +108,21 @@ function recipeSummary(recipe: RecipeListItem, mode: LanguageMode): string {
   if (mode === "af") return toListText(recipe.summaryAf, "No summary available.")
   if (mode === "en") return toListText(recipe.summaryEn, "No summary available.")
   return `${toListText(recipe.summaryEn, "No summary available.")}\n${toListText(recipe.summaryAf, "")}`
+}
+
+function alternativeMethodName(method: RecipeAlternativeMethod, mode: LanguageMode): string {
+  if (mode === "af") return method.nameAf
+  if (mode === "en") return method.nameEn
+  return `${method.nameEn} / ${method.nameAf}`
+}
+
+function alternativeMethodSummary(
+  method: RecipeAlternativeMethod,
+  mode: LanguageMode
+): string | undefined {
+  if (mode === "af") return method.summaryAf
+  if (mode === "en") return method.summaryEn
+  return [method.summaryEn, method.summaryAf].filter(Boolean).join(" / ")
 }
 
 function recipeSectionText(entity: RecipeStep | RecipeIngredient, mode: LanguageMode): string {
@@ -629,6 +645,49 @@ export default function RecipeCatalogClient({ persona }: { persona: Persona }) {
                       })}
                   </ol>
                 </div>
+                {selectedRecipe.alternativeMethods &&
+                  selectedRecipe.alternativeMethods.length > 0 && (
+                    <div
+                      className="border-border space-y-3 border-t p-5"
+                      data-testid="alternative-methods"
+                    >
+                      <h3 className="text-lg font-semibold">Alternative methods</h3>
+                      {selectedRecipe.alternativeMethods.map((method) => {
+                        const summary = alternativeMethodSummary(method, language)
+                        return (
+                          <details
+                            key={method.id}
+                            className="border-border rounded-lg border p-3 text-sm"
+                            data-testid={`alternative-method-${method.id}`}
+                          >
+                            <summary className="cursor-pointer font-medium">
+                              {alternativeMethodName(method, language)}
+                            </summary>
+                            {summary && <p className="text-muted-foreground mt-2">{summary}</p>}
+                            <ol className="mt-3 space-y-3">
+                              {[...method.steps]
+                                .sort((left, right) => left.order - right.order)
+                                .map((step) => (
+                                  <li key={step.id} className="border-border rounded-lg border p-3">
+                                    <p className="text-muted-foreground mb-2 text-xs font-semibold uppercase">
+                                      Step {step.order}
+                                    </p>
+                                    <p className="text-foreground whitespace-pre-line">
+                                      {recipeSectionText(step, language)}
+                                    </p>
+                                    {step.timerMinutes !== undefined && (
+                                      <p className="text-muted-foreground mt-2 text-xs">
+                                        Timer: {step.timerMinutes} min
+                                      </p>
+                                    )}
+                                  </li>
+                                ))}
+                            </ol>
+                          </details>
+                        )
+                      })}
+                    </div>
+                  )}
               </article>
             ) : null}
 

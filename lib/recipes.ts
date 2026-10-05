@@ -18,6 +18,20 @@ export interface RecipeStep {
   section?: string
 }
 
+/**
+ * A full alternative way to prepare the same dish (e.g. air fryer instead of oven).
+ * It carries its own steps because a different appliance changes timings and order,
+ * which per-step tweaks cannot express. Ingredients are shared with the base recipe.
+ */
+export interface RecipeAlternativeMethod {
+  id: string
+  nameEn: string
+  nameAf: string
+  summaryEn?: string
+  summaryAf?: string
+  steps: RecipeStep[]
+}
+
 export interface RecipeImageMetadata {
   url: string
   source: string
@@ -44,6 +58,7 @@ export interface RecipeRecord {
   image: RecipeImageMetadata
   ingredients: RecipeIngredient[]
   steps: RecipeStep[]
+  alternativeMethods?: RecipeAlternativeMethod[]
   createdAt: string
   updatedAt: string
 }
@@ -115,6 +130,83 @@ export interface RecipeCreatePayload {
     timerMinutes?: number
     section?: string
   }>
+  alternativeMethods?: Array<{
+    id?: string
+    nameEn: string
+    nameAf: string
+    summaryEn?: string
+    summaryAf?: string
+    steps: Array<{
+      id?: string
+      order?: number
+      instructionEn: string
+      instructionAf: string
+      timerMinutes?: number
+      section?: string
+    }>
+  }>
+}
+
+function toTrimmedString(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined
+  const trimmed = value.trim()
+  return trimmed.length ? trimmed : undefined
+}
+
+function toNonNegativeInt(value: unknown): number | undefined {
+  if (typeof value !== "number" || !Number.isInteger(value) || value < 0) return undefined
+  return value
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value)
+}
+
+/**
+ * Shared by the create, update and seed paths so the three cannot drift apart.
+ * Input is untrusted request data, so everything is narrowed from `unknown`.
+ * Malformed entries are kept with empty fields rather than dropped, so that
+ * `validateAlternativeMethods` can report them instead of silently losing data.
+ */
+export function normalizeAlternativeMethods(
+  input: unknown,
+  recipeId: string
+): RecipeAlternativeMethod[] {
+  if (!Array.isArray(input)) return []
+
+  return input.filter(isRecord).map((method, methodIndex) => {
+    const methodId = toTrimmedString(method.id) ?? `alt-${recipeId}-${methodIndex + 1}`
+    const rawSteps = Array.isArray(method.steps) ? method.steps.filter(isRecord) : []
+
+    return {
+      id: methodId,
+      nameEn: toTrimmedString(method.nameEn) ?? "",
+      nameAf: toTrimmedString(method.nameAf) ?? "",
+      summaryEn: toTrimmedString(method.summaryEn),
+      summaryAf: toTrimmedString(method.summaryAf),
+      steps: rawSteps.map((step, stepIndex) => ({
+        id: toTrimmedString(step.id) ?? `${methodId}-step-${stepIndex + 1}`,
+        order: toNonNegativeInt(step.order) || stepIndex + 1,
+        instructionEn: toTrimmedString(step.instructionEn) ?? "",
+        instructionAf: toTrimmedString(step.instructionAf) ?? "",
+        timerMinutes: toNonNegativeInt(step.timerMinutes),
+        section: toTrimmedString(step.section),
+      })),
+    }
+  })
+}
+
+export function validateAlternativeMethods(methods: RecipeAlternativeMethod[]): string | null {
+  for (const method of methods) {
+    if (!method.nameEn || !method.nameAf) {
+      return "Alternative methods must include English and Afrikaans names"
+    }
+    if (method.steps.length === 0) return "Alternative methods must include at least one step"
+    if (method.steps.some((step) => !step.instructionEn || !step.instructionAf)) {
+      return "All alternative method steps must include English and Afrikaans instructions"
+    }
+  }
+  return null
 }
 
 export const KNOWN_RECIPE_STATUSES: RecipeStatus[] = ["draft", "published", "archived"]
@@ -1261,6 +1353,39 @@ export const SAMPLE_RECIPES: RecipeCreatePayload[] = [
         section: "Sauce",
       },
     ],
+    alternativeMethods: [
+      {
+        nameEn: "Oven-baked",
+        nameAf: "In die oond gebak",
+        summaryEn: "Hands-off: bake the rolls instead of simmering them on the stove.",
+        summaryAf:
+          "Min moeite: bak die rolletjies in die oond in plaas van om dit op die stoof te prut.",
+        steps: [
+          {
+            order: 1,
+            instructionEn:
+              "Prepare and roll the cabbage leaves as in the main method. Heat the oven to 180 °C.",
+            instructionAf:
+              "Berei die koolblare voor en rol dit soos in die hoofmetode. Verhit die oond tot 180 °C.",
+          },
+          {
+            order: 2,
+            instructionEn:
+              "Pack the rolls seam-side down in a deep baking dish and pour over the tomato paste mixed with the water.",
+            instructionAf:
+              "Pak die rolletjies met die naat na onder in 'n diep bakbak en giet die tamatiepasta, gemeng met die water, oor.",
+          },
+          {
+            order: 3,
+            timerMinutes: 50,
+            instructionEn:
+              "Cover tightly with foil and bake for 50 minutes. Remove the foil, add the cheddar and bake 10 minutes more until bubbling.",
+            instructionAf:
+              "Maak styf met foelie toe en bak 50 minute. Haal die foelie af, voeg die cheddar by en bak nog 10 minute tot dit borrel.",
+          },
+        ],
+      },
+    ],
   },
   {
     status: "draft",
@@ -1421,6 +1546,70 @@ export const SAMPLE_RECIPES: RecipeCreatePayload[] = [
           "Spoon the mince mixture into the potatoes and sprinkle with the cheddar. Return to the oven for 5 minutes until melted, then top with the feta and serve.",
         instructionAf:
           "Skep die maalvleismengsel in die aartappels en strooi die cheddar oor. Sit 5 minute terug in die oond tot gesmelt, plaas dan die feta bo-op en bedien.",
+      },
+    ],
+    alternativeMethods: [
+      {
+        nameEn: "Air fryer",
+        nameAf: "Lugbraaier",
+        summaryEn: "Faster, with a crisp skin. Make the topping while the potatoes cook.",
+        summaryAf: "Vinniger, met 'n bros skil. Maak die vulsel terwyl die aartappels gaarmaak.",
+        steps: [
+          {
+            order: 1,
+            timerMinutes: 40,
+            instructionEn:
+              "Prick the potatoes, rub with oil and salt, and air fry at 200 °C for 35 to 40 minutes, turning halfway, until the skins are crisp and a knife slides in easily.",
+            instructionAf:
+              "Prik die aartappels, vryf met olie en sout, en lugbraai 35 tot 40 minute by 200 °C. Draai halfpad om tot die skil bros is en 'n mes maklik insteek.",
+          },
+          {
+            order: 2,
+            instructionEn:
+              "Make the mince, bean and broccoli topping on the stove as in the main method.",
+            instructionAf:
+              "Maak die maalvleis-, boontjie- en broccolivulsel op die stoof soos in die hoofmetode.",
+          },
+          {
+            order: 3,
+            timerMinutes: 3,
+            instructionEn:
+              "Cut a cross in each potato, fill with the topping and sprinkle with cheddar. Air fry for 2 to 3 minutes until melted, then top with the feta.",
+            instructionAf:
+              "Sny 'n kruis in elke aartappel, vul met die vulsel en strooi cheddar oor. Lugbraai 2 tot 3 minute tot gesmelt en sit dan die feta bo-op.",
+          },
+        ],
+      },
+      {
+        nameEn: "Microwave then oven",
+        nameAf: "Mikrogolf en dan oond",
+        summaryEn: "Cuts the bake time by about 40 minutes and still gives a crisp skin.",
+        summaryAf: "Verkort die baktyd met omtrent 40 minute en gee steeds 'n bros skil.",
+        steps: [
+          {
+            order: 1,
+            timerMinutes: 12,
+            instructionEn:
+              "Prick the potatoes and microwave on high for 10 to 12 minutes, turning halfway, until nearly soft.",
+            instructionAf:
+              "Prik die aartappels en mikrogolf 10 tot 12 minute op hoog. Draai halfpad om tot amper sag.",
+          },
+          {
+            order: 2,
+            timerMinutes: 20,
+            instructionEn:
+              "Rub with oil and coarse salt and bake at 220 °C for 15 to 20 minutes until the skins are crisp.",
+            instructionAf:
+              "Vryf met olie en growwe sout en bak 15 tot 20 minute by 220 °C tot die skil bros is.",
+          },
+          {
+            order: 3,
+            instructionEn:
+              "Make the topping while they bake, then fill, add the cheddar and feta and serve.",
+            instructionAf:
+              "Maak die vulsel terwyl hulle bak, vul dan, voeg die cheddar en feta by en bedien.",
+          },
+        ],
       },
     ],
   },

@@ -3,7 +3,9 @@ import { NextResponse } from "next/server"
 import {
   getExpandedAudienceAliases,
   KNOWN_RECIPE_STATUSES,
+  normalizeAlternativeMethods,
   normalizeRecipeAudienceUserIds,
+  validateAlternativeMethods,
   type RecipeCreatePayload,
   type RecipeRecord,
   isRecipeAudienceMatch,
@@ -60,6 +62,8 @@ function buildRecipe(payload: RecipeCreatePayload, ownerUserId: string, id = `re
       }
     })
 
+  const alternativeMethods = normalizeAlternativeMethods(payload.alternativeMethods, id)
+
   return {
     id,
     status: payload.status || "draft",
@@ -77,6 +81,7 @@ function buildRecipe(payload: RecipeCreatePayload, ownerUserId: string, id = `re
     image: payload.image,
     ingredients,
     steps,
+    ...(alternativeMethods.length > 0 ? { alternativeMethods } : {}),
     createdAt: now,
     updatedAt: now,
   }
@@ -96,7 +101,7 @@ function validatePayload(recipe: RecipeRecord): string | null {
   if (!recipe.image.attributionText) return "Image attribution text is required"
   const badSteps = recipe.steps.some((step) => !step.instructionEn || !step.instructionAf)
   if (badSteps) return "All steps must include English and Afrikaans instructions"
-  return null
+  return validateAlternativeMethods(recipe.alternativeMethods ?? [])
 }
 
 async function buildFilteredRecipesWithSummary(role: string, userId: string, filters: URLSearchParams) {
