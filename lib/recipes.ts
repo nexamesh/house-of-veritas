@@ -1053,6 +1053,9 @@ export const SAMPLE_RECIPES: RecipeCreatePayload[] = [
       { name: "Black pepper", quantity: "1/2", unit: "teaspoon" },
       { name: "Tomato paste", quantity: "1", unit: "tablespoon (optional)" },
       { name: "Water or stock", quantity: "200", unit: "ml" },
+      { name: "Beans", quantity: "1", unit: "tin (400 g), drained" },
+      { name: "Cheddar", quantity: "3/4", unit: "cup, grated" },
+      { name: "Feta", quantity: "100", unit: "g, crumbled, to serve" },
     ],
     steps: [
       {
@@ -1079,9 +1082,10 @@ export const SAMPLE_RECIPES: RecipeCreatePayload[] = [
       {
         order: 4,
         timerMinutes: 8,
-        instructionEn: "Add the cauliflower, potato and stock. Cover and simmer for 8 minutes.",
+        instructionEn:
+          "Add the cauliflower, potato, beans and stock. Cover and simmer for 8 minutes.",
         instructionAf:
-          "Voeg die blomkool, aartappel en sous of aftreksel by. Maak toe en prut 8 minute.",
+          "Voeg die blomkool, aartappel, bone en aftreksel by. Maak toe en prut 8 minute.",
       },
       {
         order: 5,
@@ -1094,9 +1098,9 @@ export const SAMPLE_RECIPES: RecipeCreatePayload[] = [
       {
         order: 6,
         instructionEn:
-          "Uncover, let the liquid reduce slightly, adjust the seasoning and serve hot.",
+          "Uncover and let the liquid reduce slightly. Sprinkle over the cheddar, cover for 2 minutes until melted, then serve topped with the feta. Go easy on extra salt as the feta is salty.",
         instructionAf:
-          "Haal die deksel af, laat die vloeistof effens inkook, proe vir sout en bedien warm.",
+          "Haal die deksel af en laat die vloeistof effens inkook. Strooi die cheddar oor, maak 2 minute toe tot dit gesmelt het, en bedien met die feta bo-op. Wees spaarsaam met ekstra sout, want die feta is sout.",
       },
     ],
   },
@@ -1132,6 +1136,9 @@ export const SAMPLE_RECIPES: RecipeCreatePayload[] = [
       { name: "Potatoes", quantity: "3", unit: "medium, peeled and cubed", section: "Topping" },
       { name: "Cauliflower florets", quantity: "2", unit: "cups", section: "Topping" },
       { name: "Butter or oil", quantity: "2", unit: "tablespoons", section: "Topping" },
+      { name: "Beans", quantity: "1", unit: "tin (400 g), drained", section: "Filling" },
+      { name: "Broccoli florets", quantity: "1", unit: "cup, small", section: "Filling" },
+      { name: "Cheddar", quantity: "1", unit: "cup, grated, divided", section: "Topping" },
       { name: "Salt and black pepper", quantity: "to taste" },
     ],
     steps: [
@@ -1140,9 +1147,9 @@ export const SAMPLE_RECIPES: RecipeCreatePayload[] = [
         timerMinutes: 20,
         section: "Topping",
         instructionEn:
-          "Boil the potato and cauliflower in salted water until very soft. Drain, add the butter and mash until smooth.",
+          "Boil the potato and cauliflower in salted water until very soft. Drain, add the butter and mash until smooth. Fold in half of the cheddar.",
         instructionAf:
-          "Kook die aartappel en blomkool in gesoute water tot baie sag. Giet af, voeg die botter by en stamp glad.",
+          "Kook die aartappel en blomkool in gesoute water tot baie sag. Giet af, voeg die botter by en stamp glad. Vou die helfte van die cheddar in.",
       },
       {
         order: 2,
@@ -1165,17 +1172,17 @@ export const SAMPLE_RECIPES: RecipeCreatePayload[] = [
         timerMinutes: 10,
         section: "Filling",
         instructionEn:
-          "Add the stock and simmer uncovered for 10 minutes until thick. Season to taste.",
+          "Add the stock, beans and broccoli and simmer uncovered for 10 minutes until thick. Season to taste.",
         instructionAf:
-          "Voeg die aftreksel by en prut 10 minute sonder deksel tot dik. Geur na smaak.",
+          "Voeg die aftreksel, bone en broccoli by en prut 10 minute sonder deksel tot dik. Geur na smaak.",
       },
       {
         order: 5,
         timerMinutes: 20,
         instructionEn:
-          "Spoon the mince into an ovenproof dish and top with the mash. Bake at 200 °C for 20 minutes until golden.",
+          "Spoon the mince into an ovenproof dish and top with the mash. Sprinkle over the remaining cheddar. Bake at 200 °C for 20 minutes until golden.",
         instructionAf:
-          "Skep die maalvleis in 'n ovenvaste bak en versier met die puree. Bak 20 minute by 200 °C tot goudbruin.",
+          "Skep die maalvleis in 'n ovenvaste bak en versier met die puree. Strooi die oorblywende cheddar oor. Bak 20 minute by 200 °C tot goudbruin.",
       },
     ],
   },
@@ -1208,6 +1215,8 @@ export const SAMPLE_RECIPES: RecipeCreatePayload[] = [
       { name: "Salt and black pepper", quantity: "to taste", section: "Rolls" },
       { name: "Tomato paste or sauce", quantity: "3", unit: "tablespoons", section: "Sauce" },
       { name: "Water or stock", quantity: "300", unit: "ml", section: "Sauce" },
+      { name: "Feta", quantity: "100", unit: "g, crumbled", section: "Rolls" },
+      { name: "Cheddar", quantity: "1/2", unit: "cup, grated", section: "Sauce" },
     ],
     steps: [
       {
@@ -1222,8 +1231,9 @@ export const SAMPLE_RECIPES: RecipeCreatePayload[] = [
       {
         order: 2,
         instructionEn:
-          "Mix the raw mince, onion, carrot, rice, paprika, salt and pepper in a bowl.",
-        instructionAf: "Meng die rou maalvleis, ui, wortel, rys, paprika, sout en peper in 'n bak.",
+          "Mix the raw mince, onion, carrot, rice, feta, paprika, salt and pepper in a bowl. Go easy on the salt as the feta is salty.",
+        instructionAf:
+          "Meng die rou maalvleis, ui, wortel, rys, feta, paprika, sout en peper in 'n bak. Wees spaarsaam met die sout, want die feta is sout.",
         section: "Rolls",
       },
       {
@@ -1245,10 +1255,88 @@ export const SAMPLE_RECIPES: RecipeCreatePayload[] = [
         order: 5,
         timerMinutes: 40,
         instructionEn:
-          "Mix the tomato paste with the water, pour over the rolls, cover and simmer gently for 40 minutes until the mince is cooked through.",
+          "Mix the tomato paste with the water, pour over the rolls, cover and simmer gently for 40 minutes until the mince is cooked through. For the last 5 minutes, sprinkle the cheddar over the top.",
         instructionAf:
-          "Meng die tamatiepasta met die water, giet oor die rolletjies, maak toe en prut sag 40 minute tot die maalvleis deurgaar is.",
+          "Meng die tamatiepasta met die water, giet oor die rolletjies, maak toe en prut sag 40 minute tot die maalvleis deurgaar is. Strooi die cheddar gedurende die laaste 5 minute bo-oor.",
         section: "Sauce",
+      },
+    ],
+  },
+  {
+    status: "draft",
+    audienceUserIds: ["hans", "irma"],
+    titleEn: "Cheesy Broccoli & Bean Mince Bake",
+    summaryEn:
+      "Broccoli, beans and mince in a tomato sauce, baked under melted cheddar with feta crumbled on top.",
+    titleAf: "Kaasbroccoli- en boontjie-maalvleisbak",
+    summaryAf:
+      "Broccoli, bone en maalvleis in tamatiesous, gebak onder gesmelte cheddar met feta bo-oor.",
+    servings: 4,
+    prepMinutes: 15,
+    cookMinutes: 35,
+    cuisine: "Family",
+    category: "Main",
+    // TODO: replace with a properly licensed photo before publishing.
+    image: {
+      url: "",
+      source: "Placeholder",
+      license: "Unknown",
+      attributionText: "Placeholder - replace with a licensed image",
+    },
+    ingredients: [
+      { name: "Mince", quantity: "500", unit: "g" },
+      { name: "Broccoli florets", quantity: "4", unit: "cups, medium" },
+      { name: "Beans", quantity: "1", unit: "tin (400 g), drained" },
+      { name: "Onion", quantity: "1", unit: "large, chopped" },
+      { name: "Carrot", quantity: "1", unit: "grated" },
+      { name: "Green pepper", quantity: "1", unit: "chopped" },
+      { name: "Tomato paste or sauce", quantity: "3", unit: "tablespoons" },
+      { name: "Water or stock", quantity: "150", unit: "ml" },
+      { name: "Paprika", quantity: "2", unit: "teaspoons" },
+      { name: "Cooking oil", quantity: "1", unit: "tablespoon" },
+      { name: "Cheddar", quantity: "1", unit: "cup, grated" },
+      { name: "Feta", quantity: "100", unit: "g, crumbled" },
+      { name: "Salt and black pepper", quantity: "to taste" },
+    ],
+    steps: [
+      {
+        order: 1,
+        timerMinutes: 3,
+        instructionEn:
+          "Steam or boil the broccoli florets for 3 minutes until bright green and just tender. Drain well.",
+        instructionAf:
+          "Stoom of kook die broccoliblommetjies 3 minute tot helder groen en net sag. Giet goed af.",
+      },
+      {
+        order: 2,
+        timerMinutes: 6,
+        instructionEn:
+          "Brown the mince in the oil on high heat, then add the onion, carrot and green pepper and cook for 5 minutes.",
+        instructionAf:
+          "Braai die maalvleis in die olie op hoë hitte tot bruin, voeg dan die ui, wortel en groenpeper by en kook 5 minute.",
+      },
+      {
+        order: 3,
+        timerMinutes: 8,
+        instructionEn:
+          "Stir in the paprika, tomato paste, stock and beans. Simmer for 8 minutes, then season with salt and pepper.",
+        instructionAf:
+          "Roer die paprika, tamatiepasta, aftreksel en bone in. Prut 8 minute en geur dan met sout en peper.",
+      },
+      {
+        order: 4,
+        instructionEn:
+          "Spoon the mince into an ovenproof dish. Arrange the broccoli on top and sprinkle with the cheddar.",
+        instructionAf:
+          "Skep die maalvleis in 'n ovenvaste bak. Rangskik die broccoli bo-op en strooi die cheddar oor.",
+      },
+      {
+        order: 5,
+        timerMinutes: 15,
+        instructionEn:
+          "Bake at 200 °C for 15 minutes until the cheese is bubbling and golden. Crumble the feta over the top and serve.",
+        instructionAf:
+          "Bak 15 minute by 200 °C tot die kaas borrel en goudbruin is. Krummel die feta bo-oor en bedien.",
       },
     ],
   },
