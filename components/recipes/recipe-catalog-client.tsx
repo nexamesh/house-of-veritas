@@ -559,13 +559,23 @@ export default function RecipeCatalogClient({ persona }: { persona: Persona }) {
                   </p>
                 </div>
                 <div className="grid gap-6 p-5 sm:grid-cols-2">
-                  <Image
-                    src={selectedRecipe.image.url}
-                    alt={selectedRecipe.titleEn}
-                    width={800}
-                    height={450}
-                    className="border-border h-56 w-full rounded-xl border object-cover"
-                  />
+                  {selectedRecipe.image.url ? (
+                    <Image
+                      src={selectedRecipe.image.url}
+                      alt={selectedRecipe.titleEn}
+                      width={800}
+                      height={450}
+                      className="border-border h-56 w-full rounded-xl border object-cover"
+                    />
+                  ) : (
+                    // next/image throws on an empty src, and draft recipes can have no image yet.
+                    <div
+                      className="border-border bg-muted text-muted-foreground flex h-56 w-full items-center justify-center rounded-xl border text-sm"
+                      data-testid="recipe-image-placeholder"
+                    >
+                      No image yet
+                    </div>
+                  )}
                   <div className="space-y-2 text-sm">
                     <p className="text-muted-foreground">
                       <span className="text-foreground font-semibold">Source:</span>{" "}

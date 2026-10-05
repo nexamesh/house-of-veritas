@@ -115,4 +115,21 @@ describe("RecipeCatalogClient alternative methods", () => {
     await screen.findAllByText(/Jacket potatoes/)
     expect(screen.queryByTestId("alternative-methods")).not.toBeInTheDocument()
   })
+
+  it("renders a placeholder instead of next/image when the image url is empty", async () => {
+    mockApi({ ...baseRecipe, image: { ...baseRecipe.image, url: "" } })
+    render(<RecipeCatalogClient persona="charl" />)
+
+    const placeholder = await screen.findByTestId("recipe-image-placeholder")
+    expect(placeholder).toHaveTextContent("No image yet")
+    expect(screen.queryByAltText("Jacket potatoes")).not.toBeInTheDocument()
+  })
+
+  it("renders the image and no placeholder when the image url is set", async () => {
+    mockApi(baseRecipe)
+    render(<RecipeCatalogClient persona="charl" />)
+
+    expect(await screen.findByAltText("Jacket potatoes")).toBeInTheDocument()
+    expect(screen.queryByTestId("recipe-image-placeholder")).not.toBeInTheDocument()
+  })
 })
