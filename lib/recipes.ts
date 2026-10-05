@@ -590,8 +590,10 @@ export const SAMPLE_RECIPES: RecipeCreatePayload[] = [
       {
         order: 5,
         timerMinutes: 1,
-        instructionEn: "Stir in the uncooked rice and coat it thoroughly in the tomato mixture for about 1 minute.",
-        instructionAf: "Roer die rou rys in en bedek dit deeglik met die tamatiemengsel vir ongeveer 1 minuut.",
+        instructionEn:
+          "Stir in the uncooked rice and coat it thoroughly in the tomato mixture for about 1 minute.",
+        instructionAf:
+          "Roer die rou rys in en bedek dit deeglik met die tamatiemengsel vir ongeveer 1 minuut.",
       },
       {
         order: 6,
@@ -620,8 +622,10 @@ export const SAMPLE_RECIPES: RecipeCreatePayload[] = [
       {
         order: 9,
         timerMinutes: 5,
-        instructionEn: "Turn the heat off and leave the pot covered for 5 minutes, then gently fluff the rice.",
-        instructionAf: "Sit die hitte af en laat die pot 5 minute toegemaak staan. Pluis dan die rys sagkens.",
+        instructionEn:
+          "Turn the heat off and leave the pot covered for 5 minutes, then gently fluff the rice.",
+        instructionAf:
+          "Sit die hitte af en laat die pot 5 minute toegemaak staan. Pluis dan die rys sagkens.",
       },
     ],
   },
@@ -654,7 +658,11 @@ export const SAMPLE_RECIPES: RecipeCreatePayload[] = [
       { name: "Onion", quantity: 1, unit: "chopped" },
       { name: "Green pepper", quantity: 1, unit: "sliced or chopped" },
       { name: "Cheddar", quantity: "generous", unit: "grated" },
-      { name: "Water or stock", quantity: "2-3", unit: "tablespoons, only if the potatoes look dry" },
+      {
+        name: "Water or stock",
+        quantity: "2-3",
+        unit: "tablespoons, only if the potatoes look dry",
+      },
       { name: "Salt", quantity: "light", unit: "the bacon and cheddar are salty" },
       { name: "Black pepper", quantity: "to taste" },
       { name: "Paprika, garlic, mixed herbs, or chilli", quantity: "optional" },
@@ -745,8 +753,10 @@ export const SAMPLE_RECIPES: RecipeCreatePayload[] = [
       {
         order: 1,
         timerMinutes: 10,
-        instructionEn: "Boil the spaghetti until just tender. Reserve about 1/2 cup pasta water, then drain.",
-        instructionAf: "Kook die spaghetti tot net sag. Hou ongeveer 1/2 koppie pastawater, dreineer dan.",
+        instructionEn:
+          "Boil the spaghetti until just tender. Reserve about 1/2 cup pasta water, then drain.",
+        instructionAf:
+          "Kook die spaghetti tot net sag. Hou ongeveer 1/2 koppie pastawater, dreineer dan.",
       },
       {
         order: 2,
@@ -821,8 +831,10 @@ export const SAMPLE_RECIPES: RecipeCreatePayload[] = [
       {
         order: 1,
         timerMinutes: 8,
-        instructionEn: "Dice the potatoes into small cubes and parboil for 6 to 8 minutes. Drain well.",
-        instructionAf: "Sny die aartappels in klein blokkies en voorkook 6 tot 8 minute. Dreineer goed.",
+        instructionEn:
+          "Dice the potatoes into small cubes and parboil for 6 to 8 minutes. Drain well.",
+        instructionAf:
+          "Sny die aartappels in klein blokkies en voorkook 6 tot 8 minute. Dreineer goed.",
       },
       {
         order: 2,
@@ -1002,6 +1014,241 @@ export const SAMPLE_RECIPES: RecipeCreatePayload[] = [
         order: 5,
         instructionEn: "Serve over rice with a little grated cheddar if you want it.",
         instructionAf: "Bedien oor rys met 'n bietjie gerasperde cheddar indien jy wil.",
+      },
+    ],
+  },
+  {
+    status: "draft",
+    audienceUserIds: ["hans", "irma"],
+    titleEn: "Mince & Veg Skillet",
+    summaryEn:
+      "A one-pan mince dish with potato, carrot, cauliflower, broccoli, cabbage and green pepper.",
+    titleAf: "Maalvleis- en groentepan",
+    summaryAf:
+      "'n Eenpan-maalvleisgereg met aartappel, wortel, blomkool, broccoli, kool en groenpeper.",
+    servings: 4,
+    prepMinutes: 15,
+    cookMinutes: 30,
+    cuisine: "Family",
+    category: "Main",
+    // TODO: replace with a properly licensed photo before publishing.
+    image: {
+      url: "",
+      source: "Placeholder",
+      license: "Unknown",
+      attributionText: "Placeholder - replace with a licensed image",
+    },
+    ingredients: [
+      { name: "Mince", quantity: "500", unit: "g" },
+      { name: "Potatoes", quantity: "2", unit: "medium, diced 1 cm" },
+      { name: "Onion", quantity: "1", unit: "large, chopped" },
+      { name: "Carrots", quantity: "2", unit: "diced small" },
+      { name: "Green pepper", quantity: "1", unit: "chopped" },
+      { name: "Cauliflower florets", quantity: "2", unit: "cups, small" },
+      { name: "Broccoli florets", quantity: "2", unit: "cups, small" },
+      { name: "Cabbage", quantity: "2", unit: "cups, shredded" },
+      { name: "Cooking oil", quantity: "2", unit: "tablespoons" },
+      { name: "Paprika", quantity: "2", unit: "teaspoons" },
+      { name: "Salt", quantity: "1", unit: "teaspoon" },
+      { name: "Black pepper", quantity: "1/2", unit: "teaspoon" },
+      { name: "Tomato paste", quantity: "1", unit: "tablespoon (optional)" },
+      { name: "Water or stock", quantity: "200", unit: "ml" },
+    ],
+    steps: [
+      {
+        order: 1,
+        timerMinutes: 10,
+        instructionEn: "Fry the diced potato in 1 tablespoon of oil until golden. Set aside.",
+        instructionAf: "Braai die aartappelblokkies in 1 eetlepel olie tot goudbruin. Sit eenkant.",
+      },
+      {
+        order: 2,
+        timerMinutes: 6,
+        instructionEn: "Brown the mince on high heat, breaking it up. Drain off the excess fat.",
+        instructionAf:
+          "Braai die maalvleis op hoë hitte tot bruin en breek dit fyn. Giet oortollige vet af.",
+      },
+      {
+        order: 3,
+        timerMinutes: 5,
+        instructionEn:
+          "Add the onion and carrot and cook for 5 minutes. Stir in the paprika, salt, pepper and tomato paste.",
+        instructionAf:
+          "Voeg die ui en wortel by en kook 5 minute. Roer die paprika, sout, peper en tamatiepasta in.",
+      },
+      {
+        order: 4,
+        timerMinutes: 8,
+        instructionEn: "Add the cauliflower, potato and stock. Cover and simmer for 8 minutes.",
+        instructionAf:
+          "Voeg die blomkool, aartappel en sous of aftreksel by. Maak toe en prut 8 minute.",
+      },
+      {
+        order: 5,
+        timerMinutes: 6,
+        instructionEn:
+          "Add the green pepper, broccoli and cabbage. Cover and cook 5 to 6 minutes until just tender.",
+        instructionAf:
+          "Voeg die groenpeper, broccoli en kool by. Maak toe en kook 5 tot 6 minute tot net sag.",
+      },
+      {
+        order: 6,
+        instructionEn:
+          "Uncover, let the liquid reduce slightly, adjust the seasoning and serve hot.",
+        instructionAf:
+          "Haal die deksel af, laat die vloeistof effens inkook, proe vir sout en bedien warm.",
+      },
+    ],
+  },
+  {
+    status: "draft",
+    audienceUserIds: ["hans", "irma"],
+    titleEn: "Mince & Cauliflower Cottage Pie",
+    summaryEn:
+      "Savoury mince and vegetables under a potato and cauliflower mash, baked until golden.",
+    titleAf: "Maalvleis- en blomkool-kottagiepastei",
+    summaryAf:
+      "Smaaklike maalvleis en groente onder 'n aartappel- en blomkoolpuree, gebak tot goudbruin.",
+    servings: 4,
+    prepMinutes: 20,
+    cookMinutes: 45,
+    cuisine: "Family",
+    category: "Main",
+    // TODO: replace with a properly licensed photo before publishing.
+    image: {
+      url: "",
+      source: "Placeholder",
+      license: "Unknown",
+      attributionText: "Placeholder - replace with a licensed image",
+    },
+    ingredients: [
+      { name: "Mince", quantity: "500", unit: "g", section: "Filling" },
+      { name: "Onion", quantity: "1", unit: "large, chopped", section: "Filling" },
+      { name: "Carrots", quantity: "2", unit: "diced small", section: "Filling" },
+      { name: "Green pepper", quantity: "1", unit: "chopped", section: "Filling" },
+      { name: "Tomato paste", quantity: "1", unit: "tablespoon", section: "Filling" },
+      { name: "Paprika", quantity: "2", unit: "teaspoons", section: "Filling" },
+      { name: "Water or stock", quantity: "250", unit: "ml", section: "Filling" },
+      { name: "Potatoes", quantity: "3", unit: "medium, peeled and cubed", section: "Topping" },
+      { name: "Cauliflower florets", quantity: "2", unit: "cups", section: "Topping" },
+      { name: "Butter or oil", quantity: "2", unit: "tablespoons", section: "Topping" },
+      { name: "Salt and black pepper", quantity: "to taste" },
+    ],
+    steps: [
+      {
+        order: 1,
+        timerMinutes: 20,
+        section: "Topping",
+        instructionEn:
+          "Boil the potato and cauliflower in salted water until very soft. Drain, add the butter and mash until smooth.",
+        instructionAf:
+          "Kook die aartappel en blomkool in gesoute water tot baie sag. Giet af, voeg die botter by en stamp glad.",
+      },
+      {
+        order: 2,
+        timerMinutes: 6,
+        section: "Filling",
+        instructionEn: "Brown the mince on high heat and drain the excess fat.",
+        instructionAf: "Braai die maalvleis op hoë hitte tot bruin en giet oortollige vet af.",
+      },
+      {
+        order: 3,
+        timerMinutes: 5,
+        section: "Filling",
+        instructionEn:
+          "Add the onion, carrot and green pepper and cook for 5 minutes. Stir in the paprika and tomato paste.",
+        instructionAf:
+          "Voeg die ui, wortel en groenpeper by en kook 5 minute. Roer die paprika en tamatiepasta in.",
+      },
+      {
+        order: 4,
+        timerMinutes: 10,
+        section: "Filling",
+        instructionEn:
+          "Add the stock and simmer uncovered for 10 minutes until thick. Season to taste.",
+        instructionAf:
+          "Voeg die aftreksel by en prut 10 minute sonder deksel tot dik. Geur na smaak.",
+      },
+      {
+        order: 5,
+        timerMinutes: 20,
+        instructionEn:
+          "Spoon the mince into an ovenproof dish and top with the mash. Bake at 200 °C for 20 minutes until golden.",
+        instructionAf:
+          "Skep die maalvleis in 'n ovenvaste bak en versier met die puree. Bak 20 minute by 200 °C tot goudbruin.",
+      },
+    ],
+  },
+  {
+    status: "draft",
+    audienceUserIds: ["hans", "irma"],
+    titleEn: "Mince-Stuffed Cabbage Rolls",
+    summaryEn: "Blanched cabbage leaves filled with seasoned mince and simmered in tomato sauce.",
+    titleAf: "Koolrolletjies met maalvleis",
+    summaryAf: "Geblansjeerde koolblare gevul met gekruide maalvleis en in tamatiesous gaargemaak.",
+    servings: 4,
+    prepMinutes: 25,
+    cookMinutes: 40,
+    cuisine: "Family",
+    category: "Main",
+    // TODO: replace with a properly licensed photo before publishing.
+    image: {
+      url: "",
+      source: "Placeholder",
+      license: "Unknown",
+      attributionText: "Placeholder - replace with a licensed image",
+    },
+    ingredients: [
+      { name: "Cabbage", quantity: "1", unit: "small head", section: "Rolls" },
+      { name: "Mince", quantity: "500", unit: "g", section: "Rolls" },
+      { name: "Onion", quantity: "1", unit: "chopped", section: "Rolls" },
+      { name: "Carrot", quantity: "1", unit: "grated", section: "Rolls" },
+      { name: "Cooked rice", quantity: "1", unit: "cup", section: "Rolls" },
+      { name: "Paprika", quantity: "2", unit: "teaspoons", section: "Rolls" },
+      { name: "Salt and black pepper", quantity: "to taste", section: "Rolls" },
+      { name: "Tomato paste or sauce", quantity: "3", unit: "tablespoons", section: "Sauce" },
+      { name: "Water or stock", quantity: "300", unit: "ml", section: "Sauce" },
+    ],
+    steps: [
+      {
+        order: 1,
+        timerMinutes: 5,
+        instructionEn:
+          "Core the cabbage and blanch the whole head in boiling water for 5 minutes. Peel off 8 to 10 soft leaves and trim the thick stems.",
+        instructionAf:
+          "Haal die kern uit die kool en blansjeer die hele kop 5 minute in kookwater. Trek 8 tot 10 sagte blare af en sny die dik stingels dun.",
+        section: "Rolls",
+      },
+      {
+        order: 2,
+        instructionEn:
+          "Mix the raw mince, onion, carrot, rice, paprika, salt and pepper in a bowl.",
+        instructionAf: "Meng die rou maalvleis, ui, wortel, rys, paprika, sout en peper in 'n bak.",
+        section: "Rolls",
+      },
+      {
+        order: 3,
+        instructionEn:
+          "Place a few spoonfuls of filling on each leaf, fold in the sides and roll up tightly.",
+        instructionAf: "Sit 'n paar lepels vulsel op elke blaar, vou die kante in en rol styf op.",
+        section: "Rolls",
+      },
+      {
+        order: 4,
+        instructionEn:
+          "Pack the rolls seam-side down in a pot. Shred any leftover cabbage over the top.",
+        instructionAf:
+          "Pak die rolletjies met die naat na onder in 'n pot. Sny oorblywende kool fyn en strooi bo-oor.",
+        section: "Sauce",
+      },
+      {
+        order: 5,
+        timerMinutes: 40,
+        instructionEn:
+          "Mix the tomato paste with the water, pour over the rolls, cover and simmer gently for 40 minutes until the mince is cooked through.",
+        instructionAf:
+          "Meng die tamatiepasta met die water, giet oor die rolletjies, maak toe en prut sag 40 minute tot die maalvleis deurgaar is.",
+        section: "Sauce",
       },
     ],
   },
