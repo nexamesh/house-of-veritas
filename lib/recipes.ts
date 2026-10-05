@@ -1340,6 +1340,90 @@ export const SAMPLE_RECIPES: RecipeCreatePayload[] = [
       },
     ],
   },
+  {
+    status: "draft",
+    audienceUserIds: ["hans", "irma"],
+    titleEn: "Loaded Baked Jacket Potatoes",
+    summaryEn:
+      "Crisp-skinned baked potatoes piled with mince, beans and broccoli, then topped with cheddar and feta.",
+    titleAf: "Gelaaide gebakte aartappels in die dop",
+    summaryAf:
+      "Aartappels met bros skil, gebak en gevul met maalvleis, bone en broccoli, met cheddar en feta bo-op.",
+    servings: 4,
+    prepMinutes: 15,
+    cookMinutes: 70,
+    cuisine: "Family",
+    category: "Main",
+    // TODO: replace with a properly licensed photo before publishing.
+    image: {
+      url: "",
+      source: "Placeholder",
+      license: "Unknown",
+      attributionText: "Placeholder - replace with a licensed image",
+    },
+    ingredients: [
+      { name: "Large potatoes", quantity: "4", unit: "washed", section: "Potatoes" },
+      { name: "Cooking oil", quantity: "1", unit: "tablespoon", section: "Potatoes" },
+      { name: "Coarse salt", quantity: "1", unit: "teaspoon", section: "Potatoes" },
+      { name: "Mince", quantity: "400", unit: "g", section: "Topping" },
+      { name: "Onion", quantity: "1", unit: "chopped", section: "Topping" },
+      { name: "Carrot", quantity: "1", unit: "grated", section: "Topping" },
+      { name: "Beans", quantity: "1", unit: "tin (400 g), drained", section: "Topping" },
+      { name: "Broccoli florets", quantity: "2", unit: "cups, small", section: "Topping" },
+      { name: "Paprika", quantity: "2", unit: "teaspoons", section: "Topping" },
+      { name: "Tomato paste", quantity: "2", unit: "tablespoons", section: "Topping" },
+      { name: "Water or stock", quantity: "100", unit: "ml", section: "Topping" },
+      { name: "Cheddar", quantity: "1", unit: "cup, grated", section: "Topping" },
+      { name: "Feta", quantity: "100", unit: "g, crumbled", section: "Topping" },
+      { name: "Salt and black pepper", quantity: "to taste", section: "Topping" },
+    ],
+    steps: [
+      {
+        order: 1,
+        timerMinutes: 60,
+        section: "Potatoes",
+        instructionEn:
+          "Heat the oven to 200 °C. Prick the potatoes all over with a fork, rub with the oil and coarse salt, and bake directly on the oven rack for 60 minutes until the skins are crisp and the middles are soft.",
+        instructionAf:
+          "Verhit die oond tot 200 °C. Prik die aartappels met 'n vurk rondom, vryf met die olie en growwe sout, en bak direk op die oondrak 60 minute tot die skil bros en die binnekant sag is.",
+      },
+      {
+        order: 2,
+        timerMinutes: 6,
+        section: "Topping",
+        instructionEn:
+          "While the potatoes bake, brown the mince on high heat and drain the excess fat. Add the onion and carrot and cook for 5 minutes.",
+        instructionAf:
+          "Braai die maalvleis op hoë hitte tot bruin terwyl die aartappels bak, en giet oortollige vet af. Voeg die ui en wortel by en kook 5 minute.",
+      },
+      {
+        order: 3,
+        timerMinutes: 10,
+        section: "Topping",
+        instructionEn:
+          "Stir in the paprika, tomato paste, stock, beans and broccoli. Cover and simmer for 10 minutes until the broccoli is tender. Season to taste.",
+        instructionAf:
+          "Roer die paprika, tamatiepasta, aftreksel, bone en broccoli in. Maak toe en prut 10 minute tot die broccoli sag is. Geur na smaak.",
+      },
+      {
+        order: 4,
+        section: "Potatoes",
+        instructionEn:
+          "Cut a deep cross in the top of each hot potato and squeeze the ends to open it up. Fluff the flesh with a fork.",
+        instructionAf:
+          "Sny 'n diep kruis in die bokant van elke warm aartappel en druk die punte saam om dit oop te maak. Los die vleis met 'n vurk op.",
+      },
+      {
+        order: 5,
+        timerMinutes: 5,
+        section: "Topping",
+        instructionEn:
+          "Spoon the mince mixture into the potatoes and sprinkle with the cheddar. Return to the oven for 5 minutes until melted, then top with the feta and serve.",
+        instructionAf:
+          "Skep die maalvleismengsel in die aartappels en strooi die cheddar oor. Sit 5 minute terug in die oond tot gesmelt, plaas dan die feta bo-op en bedien.",
+      },
+    ],
+  },
 ]
 
 export function normalizeRecipeTitleKey(title: string): string {
