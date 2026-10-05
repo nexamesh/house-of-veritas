@@ -5,6 +5,7 @@ import { getCollection, isMongoConfigured, withoutMongoId } from "@/lib/db/mongo
 import { randomUUID } from "crypto"
 import {
   DEFAULT_RECIPE_AUDIENCE_IDS,
+  normalizeAlternativeMethods,
   normalizeRecipeAudienceUserIds,
   RecipeMealInstance,
   RecipeRating,
@@ -62,10 +63,10 @@ function buildSeedRecipeRecord(
     .map((ingredient, index) => ({
       id: asString((ingredient as { id?: unknown }).id) ?? `ing-${recipeId}-${index + 1}`,
       quantity: ingredient.quantity,
-      unit: asString(ingredient as { unit?: unknown }),
+      unit: asString((ingredient as { unit?: unknown }).unit),
       name: asString((ingredient as { name?: unknown }).name) as string,
-      preparationNote: asString(ingredient as { preparationNote?: unknown }),
-      section: asString(ingredient as { section?: unknown }),
+      preparationNote: asString((ingredient as { preparationNote?: unknown }).preparationNote),
+      section: asString((ingredient as { section?: unknown }).section),
     }))
 
   const steps = (Array.isArray(payload.steps) ? payload.steps : []).map((step, index) => ({
@@ -73,9 +74,11 @@ function buildSeedRecipeRecord(
     order: asNonNegativeInt((step as { order?: unknown }).order) || index + 1,
     instructionEn: asString((step as { instructionEn?: unknown }).instructionEn) ?? "",
     instructionAf: asString((step as { instructionAf?: unknown }).instructionAf) ?? "",
-    timerMinutes: asNonNegativeInt(step as { timerMinutes?: unknown }),
-    section: asString(step as { section?: unknown }),
+    timerMinutes: asNonNegativeInt((step as { timerMinutes?: unknown }).timerMinutes),
+    section: asString((step as { section?: unknown }).section),
   }))
+
+  const alternativeMethods = normalizeAlternativeMethods(payload.alternativeMethods, recipeId)
 
   return {
     id: recipeId,
@@ -101,6 +104,7 @@ function buildSeedRecipeRecord(
     },
     ingredients,
     steps,
+    ...(alternativeMethods.length > 0 ? { alternativeMethods } : {}),
     createdAt: now,
     updatedAt: now,
   }

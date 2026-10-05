@@ -18,6 +18,20 @@ export interface RecipeStep {
   section?: string
 }
 
+/**
+ * A full alternative way to prepare the same dish (e.g. air fryer instead of oven).
+ * It carries its own steps because a different appliance changes timings and order,
+ * which per-step tweaks cannot express. Ingredients are shared with the base recipe.
+ */
+export interface RecipeAlternativeMethod {
+  id: string
+  nameEn: string
+  nameAf: string
+  summaryEn?: string
+  summaryAf?: string
+  steps: RecipeStep[]
+}
+
 export interface RecipeImageMetadata {
   url: string
   source: string
@@ -44,6 +58,7 @@ export interface RecipeRecord {
   image: RecipeImageMetadata
   ingredients: RecipeIngredient[]
   steps: RecipeStep[]
+  alternativeMethods?: RecipeAlternativeMethod[]
   createdAt: string
   updatedAt: string
 }
@@ -115,6 +130,83 @@ export interface RecipeCreatePayload {
     timerMinutes?: number
     section?: string
   }>
+  alternativeMethods?: Array<{
+    id?: string
+    nameEn: string
+    nameAf: string
+    summaryEn?: string
+    summaryAf?: string
+    steps: Array<{
+      id?: string
+      order?: number
+      instructionEn: string
+      instructionAf: string
+      timerMinutes?: number
+      section?: string
+    }>
+  }>
+}
+
+function toTrimmedString(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined
+  const trimmed = value.trim()
+  return trimmed.length ? trimmed : undefined
+}
+
+function toNonNegativeInt(value: unknown): number | undefined {
+  if (typeof value !== "number" || !Number.isInteger(value) || value < 0) return undefined
+  return value
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value)
+}
+
+/**
+ * Shared by the create, update and seed paths so the three cannot drift apart.
+ * Input is untrusted request data, so everything is narrowed from `unknown`.
+ * Malformed entries are kept with empty fields rather than dropped, so that
+ * `validateAlternativeMethods` can report them instead of silently losing data.
+ */
+export function normalizeAlternativeMethods(
+  input: unknown,
+  recipeId: string
+): RecipeAlternativeMethod[] {
+  if (!Array.isArray(input)) return []
+
+  return input.filter(isRecord).map((method, methodIndex) => {
+    const methodId = toTrimmedString(method.id) ?? `alt-${recipeId}-${methodIndex + 1}`
+    const rawSteps = Array.isArray(method.steps) ? method.steps.filter(isRecord) : []
+
+    return {
+      id: methodId,
+      nameEn: toTrimmedString(method.nameEn) ?? "",
+      nameAf: toTrimmedString(method.nameAf) ?? "",
+      summaryEn: toTrimmedString(method.summaryEn),
+      summaryAf: toTrimmedString(method.summaryAf),
+      steps: rawSteps.map((step, stepIndex) => ({
+        id: toTrimmedString(step.id) ?? `${methodId}-step-${stepIndex + 1}`,
+        order: toNonNegativeInt(step.order) || stepIndex + 1,
+        instructionEn: toTrimmedString(step.instructionEn) ?? "",
+        instructionAf: toTrimmedString(step.instructionAf) ?? "",
+        timerMinutes: toNonNegativeInt(step.timerMinutes),
+        section: toTrimmedString(step.section),
+      })),
+    }
+  })
+}
+
+export function validateAlternativeMethods(methods: RecipeAlternativeMethod[]): string | null {
+  for (const method of methods) {
+    if (!method.nameEn || !method.nameAf) {
+      return "Alternative methods must include English and Afrikaans names"
+    }
+    if (method.steps.length === 0) return "Alternative methods must include at least one step"
+    if (method.steps.some((step) => !step.instructionEn || !step.instructionAf)) {
+      return "All alternative method steps must include English and Afrikaans instructions"
+    }
+  }
+  return null
 }
 
 export const KNOWN_RECIPE_STATUSES: RecipeStatus[] = ["draft", "published", "archived"]
@@ -590,8 +682,10 @@ export const SAMPLE_RECIPES: RecipeCreatePayload[] = [
       {
         order: 5,
         timerMinutes: 1,
-        instructionEn: "Stir in the uncooked rice and coat it thoroughly in the tomato mixture for about 1 minute.",
-        instructionAf: "Roer die rou rys in en bedek dit deeglik met die tamatiemengsel vir ongeveer 1 minuut.",
+        instructionEn:
+          "Stir in the uncooked rice and coat it thoroughly in the tomato mixture for about 1 minute.",
+        instructionAf:
+          "Roer die rou rys in en bedek dit deeglik met die tamatiemengsel vir ongeveer 1 minuut.",
       },
       {
         order: 6,
@@ -620,8 +714,10 @@ export const SAMPLE_RECIPES: RecipeCreatePayload[] = [
       {
         order: 9,
         timerMinutes: 5,
-        instructionEn: "Turn the heat off and leave the pot covered for 5 minutes, then gently fluff the rice.",
-        instructionAf: "Sit die hitte af en laat die pot 5 minute toegemaak staan. Pluis dan die rys sagkens.",
+        instructionEn:
+          "Turn the heat off and leave the pot covered for 5 minutes, then gently fluff the rice.",
+        instructionAf:
+          "Sit die hitte af en laat die pot 5 minute toegemaak staan. Pluis dan die rys sagkens.",
       },
     ],
   },
@@ -654,7 +750,11 @@ export const SAMPLE_RECIPES: RecipeCreatePayload[] = [
       { name: "Onion", quantity: 1, unit: "chopped" },
       { name: "Green pepper", quantity: 1, unit: "sliced or chopped" },
       { name: "Cheddar", quantity: "generous", unit: "grated" },
-      { name: "Water or stock", quantity: "2-3", unit: "tablespoons, only if the potatoes look dry" },
+      {
+        name: "Water or stock",
+        quantity: "2-3",
+        unit: "tablespoons, only if the potatoes look dry",
+      },
       { name: "Salt", quantity: "light", unit: "the bacon and cheddar are salty" },
       { name: "Black pepper", quantity: "to taste" },
       { name: "Paprika, garlic, mixed herbs, or chilli", quantity: "optional" },
@@ -745,8 +845,10 @@ export const SAMPLE_RECIPES: RecipeCreatePayload[] = [
       {
         order: 1,
         timerMinutes: 10,
-        instructionEn: "Boil the spaghetti until just tender. Reserve about 1/2 cup pasta water, then drain.",
-        instructionAf: "Kook die spaghetti tot net sag. Hou ongeveer 1/2 koppie pastawater, dreineer dan.",
+        instructionEn:
+          "Boil the spaghetti until just tender. Reserve about 1/2 cup pasta water, then drain.",
+        instructionAf:
+          "Kook die spaghetti tot net sag. Hou ongeveer 1/2 koppie pastawater, dreineer dan.",
       },
       {
         order: 2,
@@ -821,8 +923,10 @@ export const SAMPLE_RECIPES: RecipeCreatePayload[] = [
       {
         order: 1,
         timerMinutes: 8,
-        instructionEn: "Dice the potatoes into small cubes and parboil for 6 to 8 minutes. Drain well.",
-        instructionAf: "Sny die aartappels in klein blokkies en voorkook 6 tot 8 minute. Dreineer goed.",
+        instructionEn:
+          "Dice the potatoes into small cubes and parboil for 6 to 8 minutes. Drain well.",
+        instructionAf:
+          "Sny die aartappels in klein blokkies en voorkook 6 tot 8 minute. Dreineer goed.",
       },
       {
         order: 2,
@@ -1002,6 +1106,510 @@ export const SAMPLE_RECIPES: RecipeCreatePayload[] = [
         order: 5,
         instructionEn: "Serve over rice with a little grated cheddar if you want it.",
         instructionAf: "Bedien oor rys met 'n bietjie gerasperde cheddar indien jy wil.",
+      },
+    ],
+  },
+  {
+    status: "draft",
+    audienceUserIds: ["hans", "irma"],
+    titleEn: "Mince & Veg Skillet",
+    summaryEn:
+      "A one-pan mince dish with potato, carrot, cauliflower, broccoli, cabbage and green pepper.",
+    titleAf: "Maalvleis- en groentepan",
+    summaryAf:
+      "'n Eenpan-maalvleisgereg met aartappel, wortel, blomkool, broccoli, kool en groenpeper.",
+    servings: 4,
+    prepMinutes: 15,
+    cookMinutes: 30,
+    cuisine: "Family",
+    category: "Main",
+    // TODO: replace with a properly licensed photo before publishing.
+    image: {
+      url: "",
+      source: "Placeholder",
+      license: "Unknown",
+      attributionText: "Placeholder - replace with a licensed image",
+    },
+    ingredients: [
+      { name: "Mince", quantity: "500", unit: "g" },
+      { name: "Potatoes", quantity: "2", unit: "medium, diced 1 cm" },
+      { name: "Onion", quantity: "1", unit: "large, chopped" },
+      { name: "Carrots", quantity: "2", unit: "diced small" },
+      { name: "Green pepper", quantity: "1", unit: "chopped" },
+      { name: "Cauliflower florets", quantity: "2", unit: "cups, small" },
+      { name: "Broccoli florets", quantity: "2", unit: "cups, small" },
+      { name: "Cabbage", quantity: "2", unit: "cups, shredded" },
+      { name: "Cooking oil", quantity: "2", unit: "tablespoons" },
+      { name: "Paprika", quantity: "2", unit: "teaspoons" },
+      { name: "Salt", quantity: "1", unit: "teaspoon" },
+      { name: "Black pepper", quantity: "1/2", unit: "teaspoon" },
+      { name: "Tomato paste", quantity: "1", unit: "tablespoon (optional)" },
+      { name: "Water or stock", quantity: "200", unit: "ml" },
+      { name: "Beans", quantity: "1", unit: "tin (400 g), drained" },
+      { name: "Cheddar", quantity: "3/4", unit: "cup, grated" },
+      { name: "Feta", quantity: "100", unit: "g, crumbled, to serve" },
+    ],
+    steps: [
+      {
+        order: 1,
+        timerMinutes: 10,
+        instructionEn: "Fry the diced potato in 1 tablespoon of oil until golden. Set aside.",
+        instructionAf: "Braai die aartappelblokkies in 1 eetlepel olie tot goudbruin. Sit eenkant.",
+      },
+      {
+        order: 2,
+        timerMinutes: 6,
+        instructionEn: "Brown the mince on high heat, breaking it up. Drain off the excess fat.",
+        instructionAf:
+          "Braai die maalvleis op hoë hitte tot bruin en breek dit fyn. Giet oortollige vet af.",
+      },
+      {
+        order: 3,
+        timerMinutes: 5,
+        instructionEn:
+          "Add the onion and carrot and cook for 5 minutes. Stir in the paprika, salt, pepper and tomato paste.",
+        instructionAf:
+          "Voeg die ui en wortel by en kook 5 minute. Roer die paprika, sout, peper en tamatiepasta in.",
+      },
+      {
+        order: 4,
+        timerMinutes: 8,
+        instructionEn:
+          "Add the cauliflower, potato, beans and stock. Cover and simmer for 8 minutes.",
+        instructionAf:
+          "Voeg die blomkool, aartappel, bone en aftreksel by. Maak toe en prut 8 minute.",
+      },
+      {
+        order: 5,
+        timerMinutes: 6,
+        instructionEn:
+          "Add the green pepper, broccoli and cabbage. Cover and cook 5 to 6 minutes until just tender.",
+        instructionAf:
+          "Voeg die groenpeper, broccoli en kool by. Maak toe en kook 5 tot 6 minute tot net sag.",
+      },
+      {
+        order: 6,
+        instructionEn:
+          "Uncover and let the liquid reduce slightly. Sprinkle over the cheddar, cover for 2 minutes until melted, then serve topped with the feta. Go easy on extra salt as the feta is salty.",
+        instructionAf:
+          "Haal die deksel af en laat die vloeistof effens inkook. Strooi die cheddar oor, maak 2 minute toe tot dit gesmelt het, en bedien met die feta bo-op. Wees spaarsaam met ekstra sout, want die feta is sout.",
+      },
+    ],
+  },
+  {
+    status: "draft",
+    audienceUserIds: ["hans", "irma"],
+    titleEn: "Mince & Cauliflower Cottage Pie",
+    summaryEn:
+      "Savoury mince and vegetables under a potato and cauliflower mash, baked until golden.",
+    titleAf: "Maalvleis- en blomkool-kottagiepastei",
+    summaryAf:
+      "Smaaklike maalvleis en groente onder 'n aartappel- en blomkoolpuree, gebak tot goudbruin.",
+    servings: 4,
+    prepMinutes: 20,
+    cookMinutes: 45,
+    cuisine: "Family",
+    category: "Main",
+    // TODO: replace with a properly licensed photo before publishing.
+    image: {
+      url: "",
+      source: "Placeholder",
+      license: "Unknown",
+      attributionText: "Placeholder - replace with a licensed image",
+    },
+    ingredients: [
+      { name: "Mince", quantity: "500", unit: "g", section: "Filling" },
+      { name: "Onion", quantity: "1", unit: "large, chopped", section: "Filling" },
+      { name: "Carrots", quantity: "2", unit: "diced small", section: "Filling" },
+      { name: "Green pepper", quantity: "1", unit: "chopped", section: "Filling" },
+      { name: "Tomato paste", quantity: "1", unit: "tablespoon", section: "Filling" },
+      { name: "Paprika", quantity: "2", unit: "teaspoons", section: "Filling" },
+      { name: "Water or stock", quantity: "250", unit: "ml", section: "Filling" },
+      { name: "Potatoes", quantity: "3", unit: "medium, peeled and cubed", section: "Topping" },
+      { name: "Cauliflower florets", quantity: "2", unit: "cups", section: "Topping" },
+      { name: "Butter or oil", quantity: "2", unit: "tablespoons", section: "Topping" },
+      { name: "Beans", quantity: "1", unit: "tin (400 g), drained", section: "Filling" },
+      { name: "Broccoli florets", quantity: "1", unit: "cup, small", section: "Filling" },
+      { name: "Cheddar", quantity: "1", unit: "cup, grated, divided", section: "Topping" },
+      { name: "Salt and black pepper", quantity: "to taste" },
+    ],
+    steps: [
+      {
+        order: 1,
+        timerMinutes: 20,
+        section: "Topping",
+        instructionEn:
+          "Boil the potato and cauliflower in salted water until very soft. Drain, add the butter and mash until smooth. Fold in half of the cheddar.",
+        instructionAf:
+          "Kook die aartappel en blomkool in gesoute water tot baie sag. Giet af, voeg die botter by en stamp glad. Vou die helfte van die cheddar in.",
+      },
+      {
+        order: 2,
+        timerMinutes: 6,
+        section: "Filling",
+        instructionEn: "Brown the mince on high heat and drain the excess fat.",
+        instructionAf: "Braai die maalvleis op hoë hitte tot bruin en giet oortollige vet af.",
+      },
+      {
+        order: 3,
+        timerMinutes: 5,
+        section: "Filling",
+        instructionEn:
+          "Add the onion, carrot and green pepper and cook for 5 minutes. Stir in the paprika and tomato paste.",
+        instructionAf:
+          "Voeg die ui, wortel en groenpeper by en kook 5 minute. Roer die paprika en tamatiepasta in.",
+      },
+      {
+        order: 4,
+        timerMinutes: 10,
+        section: "Filling",
+        instructionEn:
+          "Add the stock, beans and broccoli and simmer uncovered for 10 minutes until thick. Season to taste.",
+        instructionAf:
+          "Voeg die aftreksel, bone en broccoli by en prut 10 minute sonder deksel tot dik. Geur na smaak.",
+      },
+      {
+        order: 5,
+        timerMinutes: 20,
+        instructionEn:
+          "Spoon the mince into an ovenproof dish and top with the mash. Sprinkle over the remaining cheddar. Bake at 200 °C for 20 minutes until golden.",
+        instructionAf:
+          "Skep die maalvleis in 'n ovenvaste bak en versier met die puree. Strooi die oorblywende cheddar oor. Bak 20 minute by 200 °C tot goudbruin.",
+      },
+    ],
+  },
+  {
+    status: "draft",
+    audienceUserIds: ["hans", "irma"],
+    titleEn: "Mince-Stuffed Cabbage Rolls",
+    summaryEn: "Blanched cabbage leaves filled with seasoned mince and simmered in tomato sauce.",
+    titleAf: "Koolrolletjies met maalvleis",
+    summaryAf: "Geblansjeerde koolblare gevul met gekruide maalvleis en in tamatiesous gaargemaak.",
+    servings: 4,
+    prepMinutes: 25,
+    cookMinutes: 40,
+    cuisine: "Family",
+    category: "Main",
+    // TODO: replace with a properly licensed photo before publishing.
+    image: {
+      url: "",
+      source: "Placeholder",
+      license: "Unknown",
+      attributionText: "Placeholder - replace with a licensed image",
+    },
+    ingredients: [
+      { name: "Cabbage", quantity: "1", unit: "small head", section: "Rolls" },
+      { name: "Mince", quantity: "500", unit: "g", section: "Rolls" },
+      { name: "Onion", quantity: "1", unit: "chopped", section: "Rolls" },
+      { name: "Carrot", quantity: "1", unit: "grated", section: "Rolls" },
+      { name: "Cooked rice", quantity: "1", unit: "cup", section: "Rolls" },
+      { name: "Paprika", quantity: "2", unit: "teaspoons", section: "Rolls" },
+      { name: "Salt and black pepper", quantity: "to taste", section: "Rolls" },
+      { name: "Tomato paste or sauce", quantity: "3", unit: "tablespoons", section: "Sauce" },
+      { name: "Water or stock", quantity: "300", unit: "ml", section: "Sauce" },
+      { name: "Feta", quantity: "100", unit: "g, crumbled", section: "Rolls" },
+      { name: "Cheddar", quantity: "1/2", unit: "cup, grated", section: "Sauce" },
+    ],
+    steps: [
+      {
+        order: 1,
+        timerMinutes: 5,
+        instructionEn:
+          "Core the cabbage and blanch the whole head in boiling water for 5 minutes. Peel off 8 to 10 soft leaves and trim the thick stems.",
+        instructionAf:
+          "Haal die kern uit die kool en blansjeer die hele kop 5 minute in kookwater. Trek 8 tot 10 sagte blare af en sny die dik stingels dun.",
+        section: "Rolls",
+      },
+      {
+        order: 2,
+        instructionEn:
+          "Mix the raw mince, onion, carrot, rice, feta, paprika, salt and pepper in a bowl. Go easy on the salt as the feta is salty.",
+        instructionAf:
+          "Meng die rou maalvleis, ui, wortel, rys, feta, paprika, sout en peper in 'n bak. Wees spaarsaam met die sout, want die feta is sout.",
+        section: "Rolls",
+      },
+      {
+        order: 3,
+        instructionEn:
+          "Place a few spoonfuls of filling on each leaf, fold in the sides and roll up tightly.",
+        instructionAf: "Sit 'n paar lepels vulsel op elke blaar, vou die kante in en rol styf op.",
+        section: "Rolls",
+      },
+      {
+        order: 4,
+        instructionEn:
+          "Pack the rolls seam-side down in a pot. Shred any leftover cabbage over the top.",
+        instructionAf:
+          "Pak die rolletjies met die naat na onder in 'n pot. Sny oorblywende kool fyn en strooi bo-oor.",
+        section: "Sauce",
+      },
+      {
+        order: 5,
+        timerMinutes: 40,
+        instructionEn:
+          "Mix the tomato paste with the water, pour over the rolls, cover and simmer gently for 40 minutes until the mince is cooked through. For the last 5 minutes, sprinkle the cheddar over the top.",
+        instructionAf:
+          "Meng die tamatiepasta met die water, giet oor die rolletjies, maak toe en prut sag 40 minute tot die maalvleis deurgaar is. Strooi die cheddar gedurende die laaste 5 minute bo-oor.",
+        section: "Sauce",
+      },
+    ],
+    alternativeMethods: [
+      {
+        nameEn: "Oven-baked",
+        nameAf: "In die oond gebak",
+        summaryEn: "Hands-off: bake the rolls instead of simmering them on the stove.",
+        summaryAf:
+          "Min moeite: bak die rolletjies in die oond in plaas van om dit op die stoof te prut.",
+        steps: [
+          {
+            order: 1,
+            instructionEn:
+              "Prepare and roll the cabbage leaves as in the main method. Heat the oven to 180 °C.",
+            instructionAf:
+              "Berei die koolblare voor en rol dit soos in die hoofmetode. Verhit die oond tot 180 °C.",
+          },
+          {
+            order: 2,
+            instructionEn:
+              "Pack the rolls seam-side down in a deep baking dish and pour over the tomato paste mixed with the water.",
+            instructionAf:
+              "Pak die rolletjies met die naat na onder in 'n diep bakbak en giet die tamatiepasta, gemeng met die water, oor.",
+          },
+          {
+            order: 3,
+            timerMinutes: 50,
+            instructionEn:
+              "Cover tightly with foil and bake for 50 minutes. Remove the foil, add the cheddar and bake 10 minutes more until bubbling.",
+            instructionAf:
+              "Maak styf met foelie toe en bak 50 minute. Haal die foelie af, voeg die cheddar by en bak nog 10 minute tot dit borrel.",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    status: "draft",
+    audienceUserIds: ["hans", "irma"],
+    titleEn: "Cheesy Broccoli & Bean Mince Bake",
+    summaryEn:
+      "Broccoli, beans and mince in a tomato sauce, baked under melted cheddar with feta crumbled on top.",
+    titleAf: "Kaasbroccoli- en boontjie-maalvleisbak",
+    summaryAf:
+      "Broccoli, bone en maalvleis in tamatiesous, gebak onder gesmelte cheddar met feta bo-oor.",
+    servings: 4,
+    prepMinutes: 15,
+    cookMinutes: 35,
+    cuisine: "Family",
+    category: "Main",
+    // TODO: replace with a properly licensed photo before publishing.
+    image: {
+      url: "",
+      source: "Placeholder",
+      license: "Unknown",
+      attributionText: "Placeholder - replace with a licensed image",
+    },
+    ingredients: [
+      { name: "Mince", quantity: "500", unit: "g" },
+      { name: "Broccoli florets", quantity: "4", unit: "cups, medium" },
+      { name: "Beans", quantity: "1", unit: "tin (400 g), drained" },
+      { name: "Onion", quantity: "1", unit: "large, chopped" },
+      { name: "Carrot", quantity: "1", unit: "grated" },
+      { name: "Green pepper", quantity: "1", unit: "chopped" },
+      { name: "Tomato paste or sauce", quantity: "3", unit: "tablespoons" },
+      { name: "Water or stock", quantity: "150", unit: "ml" },
+      { name: "Paprika", quantity: "2", unit: "teaspoons" },
+      { name: "Cooking oil", quantity: "1", unit: "tablespoon" },
+      { name: "Cheddar", quantity: "1", unit: "cup, grated" },
+      { name: "Feta", quantity: "100", unit: "g, crumbled" },
+      { name: "Salt and black pepper", quantity: "to taste" },
+    ],
+    steps: [
+      {
+        order: 1,
+        timerMinutes: 3,
+        instructionEn:
+          "Steam or boil the broccoli florets for 3 minutes until bright green and just tender. Drain well.",
+        instructionAf:
+          "Stoom of kook die broccoliblommetjies 3 minute tot helder groen en net sag. Giet goed af.",
+      },
+      {
+        order: 2,
+        timerMinutes: 6,
+        instructionEn:
+          "Brown the mince in the oil on high heat, then add the onion, carrot and green pepper and cook for 5 minutes.",
+        instructionAf:
+          "Braai die maalvleis in die olie op hoë hitte tot bruin, voeg dan die ui, wortel en groenpeper by en kook 5 minute.",
+      },
+      {
+        order: 3,
+        timerMinutes: 8,
+        instructionEn:
+          "Stir in the paprika, tomato paste, stock and beans. Simmer for 8 minutes, then season with salt and pepper.",
+        instructionAf:
+          "Roer die paprika, tamatiepasta, aftreksel en bone in. Prut 8 minute en geur dan met sout en peper.",
+      },
+      {
+        order: 4,
+        instructionEn:
+          "Spoon the mince into an ovenproof dish. Arrange the broccoli on top and sprinkle with the cheddar.",
+        instructionAf:
+          "Skep die maalvleis in 'n ovenvaste bak. Rangskik die broccoli bo-op en strooi die cheddar oor.",
+      },
+      {
+        order: 5,
+        timerMinutes: 15,
+        instructionEn:
+          "Bake at 200 °C for 15 minutes until the cheese is bubbling and golden. Crumble the feta over the top and serve.",
+        instructionAf:
+          "Bak 15 minute by 200 °C tot die kaas borrel en goudbruin is. Krummel die feta bo-oor en bedien.",
+      },
+    ],
+  },
+  {
+    status: "draft",
+    audienceUserIds: ["hans", "irma"],
+    titleEn: "Loaded Baked Jacket Potatoes",
+    summaryEn:
+      "Crisp-skinned baked potatoes piled with mince, beans and broccoli, then topped with cheddar and feta.",
+    titleAf: "Gelaaide gebakte aartappels in die dop",
+    summaryAf:
+      "Aartappels met bros skil, gebak en gevul met maalvleis, bone en broccoli, met cheddar en feta bo-op.",
+    servings: 4,
+    prepMinutes: 15,
+    cookMinutes: 70,
+    cuisine: "Family",
+    category: "Main",
+    // TODO: replace with a properly licensed photo before publishing.
+    image: {
+      url: "",
+      source: "Placeholder",
+      license: "Unknown",
+      attributionText: "Placeholder - replace with a licensed image",
+    },
+    ingredients: [
+      { name: "Large potatoes", quantity: "4", unit: "washed", section: "Potatoes" },
+      { name: "Cooking oil", quantity: "1", unit: "tablespoon", section: "Potatoes" },
+      { name: "Coarse salt", quantity: "1", unit: "teaspoon", section: "Potatoes" },
+      { name: "Mince", quantity: "400", unit: "g", section: "Topping" },
+      { name: "Onion", quantity: "1", unit: "chopped", section: "Topping" },
+      { name: "Carrot", quantity: "1", unit: "grated", section: "Topping" },
+      { name: "Beans", quantity: "1", unit: "tin (400 g), drained", section: "Topping" },
+      { name: "Broccoli florets", quantity: "2", unit: "cups, small", section: "Topping" },
+      { name: "Paprika", quantity: "2", unit: "teaspoons", section: "Topping" },
+      { name: "Tomato paste", quantity: "2", unit: "tablespoons", section: "Topping" },
+      { name: "Water or stock", quantity: "100", unit: "ml", section: "Topping" },
+      { name: "Cheddar", quantity: "1", unit: "cup, grated", section: "Topping" },
+      { name: "Feta", quantity: "100", unit: "g, crumbled", section: "Topping" },
+      { name: "Salt and black pepper", quantity: "to taste", section: "Topping" },
+    ],
+    steps: [
+      {
+        order: 1,
+        timerMinutes: 60,
+        section: "Potatoes",
+        instructionEn:
+          "Heat the oven to 200 °C. Prick the potatoes all over with a fork, rub with the oil and coarse salt, and bake directly on the oven rack for 60 minutes until the skins are crisp and the middles are soft.",
+        instructionAf:
+          "Verhit die oond tot 200 °C. Prik die aartappels met 'n vurk rondom, vryf met die olie en growwe sout, en bak direk op die oondrak 60 minute tot die skil bros en die binnekant sag is.",
+      },
+      {
+        order: 2,
+        timerMinutes: 6,
+        section: "Topping",
+        instructionEn:
+          "While the potatoes bake, brown the mince on high heat and drain the excess fat. Add the onion and carrot and cook for 5 minutes.",
+        instructionAf:
+          "Braai die maalvleis op hoë hitte tot bruin terwyl die aartappels bak, en giet oortollige vet af. Voeg die ui en wortel by en kook 5 minute.",
+      },
+      {
+        order: 3,
+        timerMinutes: 10,
+        section: "Topping",
+        instructionEn:
+          "Stir in the paprika, tomato paste, stock, beans and broccoli. Cover and simmer for 10 minutes until the broccoli is tender. Season to taste.",
+        instructionAf:
+          "Roer die paprika, tamatiepasta, aftreksel, bone en broccoli in. Maak toe en prut 10 minute tot die broccoli sag is. Geur na smaak.",
+      },
+      {
+        order: 4,
+        section: "Potatoes",
+        instructionEn:
+          "Cut a deep cross in the top of each hot potato and squeeze the ends to open it up. Fluff the flesh with a fork.",
+        instructionAf:
+          "Sny 'n diep kruis in die bokant van elke warm aartappel en druk die punte saam om dit oop te maak. Los die vleis met 'n vurk op.",
+      },
+      {
+        order: 5,
+        timerMinutes: 5,
+        section: "Topping",
+        instructionEn:
+          "Spoon the mince mixture into the potatoes and sprinkle with the cheddar. Return to the oven for 5 minutes until melted, then top with the feta and serve.",
+        instructionAf:
+          "Skep die maalvleismengsel in die aartappels en strooi die cheddar oor. Sit 5 minute terug in die oond tot gesmelt, plaas dan die feta bo-op en bedien.",
+      },
+    ],
+    alternativeMethods: [
+      {
+        nameEn: "Air fryer",
+        nameAf: "Lugbraaier",
+        summaryEn: "Faster, with a crisp skin. Make the topping while the potatoes cook.",
+        summaryAf: "Vinniger, met 'n bros skil. Maak die vulsel terwyl die aartappels gaarmaak.",
+        steps: [
+          {
+            order: 1,
+            timerMinutes: 40,
+            instructionEn:
+              "Prick the potatoes, rub with oil and salt, and air fry at 200 °C for 35 to 40 minutes, turning halfway, until the skins are crisp and a knife slides in easily.",
+            instructionAf:
+              "Prik die aartappels, vryf met olie en sout, en lugbraai 35 tot 40 minute by 200 °C. Draai halfpad om tot die skil bros is en 'n mes maklik insteek.",
+          },
+          {
+            order: 2,
+            instructionEn:
+              "Make the mince, bean and broccoli topping on the stove as in the main method.",
+            instructionAf:
+              "Maak die maalvleis-, boontjie- en broccolivulsel op die stoof soos in die hoofmetode.",
+          },
+          {
+            order: 3,
+            timerMinutes: 3,
+            instructionEn:
+              "Cut a cross in each potato, fill with the topping and sprinkle with cheddar. Air fry for 2 to 3 minutes until melted, then top with the feta.",
+            instructionAf:
+              "Sny 'n kruis in elke aartappel, vul met die vulsel en strooi cheddar oor. Lugbraai 2 tot 3 minute tot gesmelt en sit dan die feta bo-op.",
+          },
+        ],
+      },
+      {
+        nameEn: "Microwave then oven",
+        nameAf: "Mikrogolf en dan oond",
+        summaryEn: "Cuts the bake time by about 40 minutes and still gives a crisp skin.",
+        summaryAf: "Verkort die baktyd met omtrent 40 minute en gee steeds 'n bros skil.",
+        steps: [
+          {
+            order: 1,
+            timerMinutes: 12,
+            instructionEn:
+              "Prick the potatoes and microwave on high for 10 to 12 minutes, turning halfway, until nearly soft.",
+            instructionAf:
+              "Prik die aartappels en mikrogolf 10 tot 12 minute op hoog. Draai halfpad om tot amper sag.",
+          },
+          {
+            order: 2,
+            timerMinutes: 20,
+            instructionEn:
+              "Rub with oil and coarse salt and bake at 220 °C for 15 to 20 minutes until the skins are crisp.",
+            instructionAf:
+              "Vryf met olie en growwe sout en bak 15 tot 20 minute by 220 °C tot die skil bros is.",
+          },
+          {
+            order: 3,
+            instructionEn:
+              "Make the topping while they bake, then fill, add the cheddar and feta and serve.",
+            instructionAf:
+              "Maak die vulsel terwyl hulle bak, vul dan, voeg die cheddar en feta by en bedien.",
+          },
+        ],
       },
     ],
   },
