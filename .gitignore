@@ -51,6 +51,9 @@ terraform/crash.log
 .worktrees/
 .claude/settings.local.json
 .claude/scheduled_tasks.lock
+
+# Local Codex harness mirror; not repository configuration.
+.codex/
 .serena/
 
 # Local agent tooling
