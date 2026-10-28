@@ -8,9 +8,9 @@ export const BACON_NACHOS_RECIPE: RecipeCreatePayload = {
   titleEn: "Crispy Bacon Bit Nachos with Avocado and Feta",
   titleAf: "Bros Spek-nacho's met Avokado en Feta",
   summaryEn:
-    "Corn chips layered with melted cheddar and crisp bacon, finished with tomato, avocado, feta and sour cream. Stovetop method included; without bacon, use drained beans, and without feta or sour cream, use extra cheddar or mashed avocado.",
+    "Corn chips layered with melted cheddar and crisp bacon, finished with tomato, avocado, feta and sour cream. Optional sautéed onion and green pepper add flavour; allow about 5 extra minutes. Stovetop method included; without bacon, use drained beans, and without feta or sour cream, use extra cheddar or mashed avocado.",
   summaryAf:
-    "Mielieskyfies in lae met gesmelte cheddar en bros spek, afgerond met tamatie, avokado, feta en suurroom. Stoofmetode ingesluit; gebruik gedreineerde bone sonder spek, meer cheddar sonder feta, of fyngedrukte avokado sonder suurroom.",
+    "Mielieskyfies in lae met gesmelte cheddar en bros spek, afgerond met tamatie, avokado, feta en suurroom. Opsionele gebraaide ui en groen soetrissie gee ekstra geur; reken op sowat 5 minute langer. Stoofmetode ingesluit; gebruik gedreineerde bone sonder spek, meer cheddar sonder feta, of fyngedrukte avokado sonder suurroom.",
   servings: 2,
   prepMinutes: 10,
   cookMinutes: 15,
@@ -33,6 +33,8 @@ export const BACON_NACHOS_RECIPE: RecipeCreatePayload = {
     { name: "Avocado", quantity: 1, unit: "diced" },
     { name: "Feta", quantity: "2-3", unit: "tablespoons, crumbled" },
     { name: "Sour cream", quantity: "3-4", unit: "tablespoons" },
+    { name: "Onion", quantity: "1/4", unit: "medium, finely diced (optional)" },
+    { name: "Green pepper", quantity: "1/2", unit: "small, finely diced (optional)" },
     { name: "Lime juice or hot sauce", quantity: "optional" },
   ],
   steps: [
@@ -40,16 +42,16 @@ export const BACON_NACHOS_RECIPE: RecipeCreatePayload = {
       order: 1,
       timerMinutes: 8,
       instructionEn:
-        "Heat the oven to 200°C (180°C fan). Fry the bacon over medium heat until crisp, about 5 to 8 minutes. Drain and chop into small bits.",
+        "Heat the oven to 200°C (180°C fan). Fry the bacon over medium heat until crisp, about 5 to 8 minutes. Drain and chop into small bits. If using onion and green pepper, sauté them in the same pan for 4 to 5 minutes until softened; drain excess fat or moisture.",
       instructionAf:
-        "Verhit die oond tot 200°C (180°C met waaier). Braai die spek oor medium hitte tot bros, ongeveer 5 tot 8 minute. Dreineer en kap in klein stukkies.",
+        "Verhit die oond tot 200°C (180°C met waaier). Braai die spek oor medium hitte tot bros, ongeveer 5 tot 8 minute. Dreineer en kap in klein stukkies. Indien jy ui en groen soetrissie gebruik, braai dit 4 tot 5 minute in dieselfde pan tot sag; dreineer oortollige vet of vog.",
     },
     {
       order: 2,
       instructionEn:
-        "Spread half the chips on a baking tray. Add half the cheddar and bacon. Repeat with the remaining chips, cheddar and bacon.",
+        "Spread half the chips on a baking tray. Add half the cheddar and bacon, plus half the cooked onion and green pepper if using. Repeat with the remaining chips and toppings.",
       instructionAf:
-        "Sprei die helfte van die skyfies op 'n bakplaat uit. Strooi die helfte van die cheddar en spek oor. Herhaal met die res van die skyfies, cheddar en spek.",
+        "Sprei die helfte van die skyfies op 'n bakplaat uit. Strooi die helfte van die cheddar en spek oor, asook die helfte van die gaar ui en groen soetrissie indien gebruik. Herhaal met die res van die skyfies en bolae.",
     },
     {
       order: 3,
@@ -77,14 +79,14 @@ export const BACON_NACHOS_RECIPE: RecipeCreatePayload = {
         {
           order: 1,
           timerMinutes: 8,
-          instructionEn: "Fry the bacon over medium heat until crisp, about 5 to 8 minutes. Drain and chop into bits.",
-          instructionAf: "Braai die spek oor medium hitte tot bros, ongeveer 5 tot 8 minute. Dreineer en kap in stukkies.",
+          instructionEn: "Fry the bacon over medium heat until crisp, about 5 to 8 minutes. Drain and chop into bits. If using onion and green pepper, sauté them in the same pan for 4 to 5 minutes until softened; drain excess fat or moisture.",
+          instructionAf: "Braai die spek oor medium hitte tot bros, ongeveer 5 tot 8 minute. Dreineer en kap in stukkies. Indien jy ui en groen soetrissie gebruik, braai dit 4 tot 5 minute in dieselfde pan tot sag; dreineer oortollige vet of vog.",
         },
         {
           order: 2,
           timerMinutes: 5,
-          instructionEn: "Layer the chips, cheddar and cooked bacon in a large dry frying pan. Cover and warm over low heat for 3 to 5 minutes, until the cheese melts.",
-          instructionAf: "Plaas die skyfies, cheddar en gaar spek in lae in 'n groot droë braaipan. Bedek en verhit 3 tot 5 minute oor lae hitte totdat die kaas smelt.",
+          instructionEn: "Layer the chips, cheddar, cooked bacon and optional cooked onion and green pepper in a large dry frying pan. Cover and warm over low heat for 3 to 5 minutes, until the cheese melts.",
+          instructionAf: "Plaas die skyfies, cheddar, gaar spek en opsionele gaar ui en groen soetrissie in lae in 'n groot droë braaipan. Bedek en verhit 3 tot 5 minute oor lae hitte totdat die kaas smelt.",
         },
         {
           order: 3,
