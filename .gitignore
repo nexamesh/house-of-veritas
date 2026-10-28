@@ -48,6 +48,7 @@ terraform/crash.log
 .claude/reports/
 .claude/state/*.json
 .claude/worktrees/
+.worktrees/
 .claude/settings.local.json
 .claude/scheduled_tasks.lock
 .serena/
@@ -68,6 +69,7 @@ playwright/.cache/
 blob-report/
 # Browser console captures; production probe runs record live page output here.
 .playwright-cli/
+.playwright-mcp/
 
 # Local dev-run output logs
 output/
