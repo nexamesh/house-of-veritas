@@ -48,6 +48,25 @@ describe("sample recipe catalog", () => {
     expect(requiredText(recipe?.image.attributionText)).toContain(recipe?.image.author ?? "")
   })
 
+  it("includes bilingual bacon nachos with a separate stovetop method", () => {
+    const recipe = SAMPLE_RECIPES.find((item) => item.titleEn ===
+      "Crispy Bacon Bit Nachos with Avocado and Feta"
+    )
+
+    expect(recipe?.status).toBe("published")
+    expect(recipe?.audienceUserIds).toEqual(["hans", "irma"])
+    expect(recipe?.ingredients.map((item) => item.name)).toEqual(
+      expect.arrayContaining(["Corn tortilla chips", "Bacon", "Cheddar", "Tomato", "Avocado", "Feta", "Sour cream"])
+    )
+    expect(recipe?.steps).toHaveLength(4)
+    expect(recipe?.alternativeMethods).toHaveLength(1)
+    expect(recipe?.alternativeMethods?.[0].nameEn).toBe("Covered frying pan")
+    expect(recipe?.alternativeMethods?.[0].nameAf).toBe("Toegemaakte braaipan")
+    expect(recipe?.alternativeMethods?.[0].steps.every(
+      (step) => step.instructionEn.trim() && step.instructionAf.trim()
+    )).toBe(true)
+  })
+
   it("finds only sample recipes whose English titles are not already stored", () => {
     const existing = [{ titleEn: SAMPLE_RECIPES[0].titleEn }]
     const missing = findMissingSampleRecipes(existing)

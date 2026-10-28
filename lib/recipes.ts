@@ -1,3 +1,5 @@
+import { BACON_NACHOS_RECIPE } from "@/lib/recipe-bacon-nachos"
+
 export type RecipeStatus = "draft" | "published" | "archived"
 
 export interface RecipeIngredient {
@@ -1613,6 +1615,7 @@ export const SAMPLE_RECIPES: RecipeCreatePayload[] = [
       },
     ],
   },
+  BACON_NACHOS_RECIPE,
 ]
 
 export function normalizeRecipeTitleKey(title: string): string {
