@@ -49,9 +49,9 @@ export const BACON_NACHOS_RECIPE: RecipeCreatePayload = {
     {
       order: 2,
       instructionEn:
-        "Spread half the chips on a baking tray. Add half the cheddar and bacon, plus half the cooked onion and green pepper if using. Repeat with the remaining chips and toppings.",
+        "Spread half the chips on a baking tray. Add half the cooked onion and green pepper if using, then half the cheddar and bacon. Repeat with the remaining chips and toppings.",
       instructionAf:
-        "Sprei die helfte van die skyfies op 'n bakplaat uit. Strooi die helfte van die cheddar en spek oor, asook die helfte van die gaar ui en groen soetrissie indien gebruik. Herhaal met die res van die skyfies en bolae.",
+        "Sprei die helfte van die skyfies op 'n bakplaat uit. Voeg die helfte van die gaar ui en groen soetrissie by indien gebruik, dan die helfte van die cheddar en spek. Herhaal met die res van die skyfies en bolae.",
     },
     {
       order: 3,
@@ -85,8 +85,8 @@ export const BACON_NACHOS_RECIPE: RecipeCreatePayload = {
         {
           order: 2,
           timerMinutes: 5,
-          instructionEn: "Layer the chips, cheddar, cooked bacon and optional cooked onion and green pepper in a large dry frying pan. Cover and warm over low heat for 3 to 5 minutes, until the cheese melts.",
-          instructionAf: "Plaas die skyfies, cheddar, gaar spek en opsionele gaar ui en groen soetrissie in lae in 'n groot droë braaipan. Bedek en verhit 3 tot 5 minute oor lae hitte totdat die kaas smelt.",
+          instructionEn: "Layer the chips, optional cooked onion and green pepper, cheddar, and cooked bacon in a large dry frying pan, keeping the vegetables beneath the cheese. Cover and warm over low heat for 3 to 5 minutes, until the cheese melts.",
+          instructionAf: "Plaas die skyfies, opsionele gaar ui en groen soetrissie, cheddar en gaar spek in lae in 'n groot droë braaipan, met die groente onder die kaas. Bedek en verhit 3 tot 5 minute oor lae hitte totdat die kaas smelt.",
         },
         {
           order: 3,
