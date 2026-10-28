@@ -194,7 +194,13 @@ describe("seeded alternative methods", () => {
 
   it("keeps every seeded method valid with non-empty EN and AF text", () => {
     const withMethods = SAMPLE_RECIPES.filter((item) => item.alternativeMethods?.length)
-    expect(withMethods).toHaveLength(2)
+    expect(withMethods.map((item) => item.titleEn)).toEqual(
+      expect.arrayContaining([
+        "Loaded Baked Jacket Potatoes",
+        "Mince-Stuffed Cabbage Rolls",
+        "Crispy Bacon Bit Nachos with Avocado and Feta",
+      ])
+    )
     for (const recipe of withMethods) {
       for (const method of recipe.alternativeMethods ?? []) {
         expect(method.nameEn.trim()).not.toBe("")
