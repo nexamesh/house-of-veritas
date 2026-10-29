@@ -174,6 +174,7 @@ export default function RecyclingGuideClient() {
                   {material.code ? (
                     <span
                       className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-300/40 bg-emerald-300/10 text-xl font-bold text-emerald-200"
+                      role="img"
                       aria-label={`Plastic code ${material.code}`}
                     >
                       {material.code}

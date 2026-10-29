@@ -17,6 +17,7 @@ describe("RecyclingGuideClient", () => {
 
   it("does not imply an unpublished PVC price", () => {
     render(<RecyclingGuideClient />)
+    expect(screen.getByRole("img", { name: "Plastic code 1" })).toBeInTheDocument()
     fireEvent.change(screen.getByLabelText("Material"), { target: { value: "pvc" } })
     fireEvent.change(screen.getByLabelText("Weight (kg)"), { target: { value: "4" } })
     expect(
