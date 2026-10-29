@@ -1,6 +1,12 @@
 import { Home, Settings } from "lucide-react"
 import { describe, expect, it } from "vitest"
-import { getActiveNavName, isNavHrefActive, type NavEntry } from "@/lib/nav-config"
+import {
+  getActiveNavName,
+  getNavForPersona,
+  isCategory,
+  isNavHrefActive,
+  type NavEntry,
+} from "@/lib/nav-config"
 
 const navEntries: NavEntry[] = [
   { name: "Overview", href: "/dashboard/hans", icon: Home },
@@ -20,4 +26,17 @@ describe("getActiveNavName", () => {
     )
     expect(isNavHrefActive("/dashboard/hans", "/dashboard/hans/maintenance")).toBe(false)
   })
+})
+
+describe("recycling navigation", () => {
+  it.each(["hans", "charl", "lucky", "irma"] as const)(
+    "links the %s persona to its guide",
+    (persona) => {
+      const entries = getNavForPersona(persona)
+      const items = entries.flatMap((entry) => (isCategory(entry) ? entry.items : [entry]))
+      expect(items.find((item) => item.name === "Recycling")?.href).toBe(
+        `/dashboard/${persona}/recycling`
+      )
+    }
+  )
 })
