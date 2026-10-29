@@ -26,6 +26,7 @@ import {
   BookLock,
   FlaskConical,
   Layers,
+  Recycle,
   type LucideIcon,
 } from "lucide-react"
 import {
@@ -191,6 +192,7 @@ const PAGE_DEFINITIONS: PageDef[] = [
   },
   { name: "Settings", href: "/dashboard", icon: Settings, category: "Admin" },
   { name: "Recipes", href: "/dashboard", icon: ChefHat, category: "Operations" },
+  { name: "Recycling", href: "/dashboard", icon: Recycle, category: "Operations" },
 ]
 
 const PERSONA_HREF_OVERRIDES: Record<string, Record<string, string>> = {
@@ -216,6 +218,7 @@ const PERSONA_HREF_OVERRIDES: Record<string, Record<string, string>> = {
     "Reviewer Lab": "/dashboard/hans/reviewer-lab",
     Settings: "/dashboard/hans/settings",
     Recipes: "/dashboard/hans/recipes",
+    Recycling: "/dashboard/hans/recycling",
     Work: "/dashboard/hans/projects",
     Casting: "/dashboard/hans/casting",
   },
@@ -230,6 +233,7 @@ const PERSONA_HREF_OVERRIDES: Record<string, Record<string, string>> = {
     Casting: "/dashboard/charl/casting",
     Documents: "/dashboard/charl/documents",
     Recipes: "/dashboard/charl/recipes",
+    Recycling: "/dashboard/charl/recycling",
     Settings: "/dashboard/charl/settings",
   },
   lucky: {
@@ -243,6 +247,7 @@ const PERSONA_HREF_OVERRIDES: Record<string, Record<string, string>> = {
     Expenses: "/dashboard/lucky/expenses",
     Documents: "/dashboard/lucky/documents",
     Recipes: "/dashboard/lucky/recipes",
+    Recycling: "/dashboard/lucky/recycling",
     Settings: "/dashboard/lucky/settings",
   },
   irma: {
@@ -252,6 +257,7 @@ const PERSONA_HREF_OVERRIDES: Record<string, Record<string, string>> = {
     Inventory: "/dashboard/irma/inventory",
     Documents: "/dashboard/irma/documents",
     Recipes: "/dashboard/irma/recipes",
+    Recycling: "/dashboard/irma/recycling",
     Settings: "/dashboard/irma/settings",
   },
 }
