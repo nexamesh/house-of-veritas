@@ -11,7 +11,7 @@ test("authenticated household guide filters materials and estimates a buyer quot
   await expect(page.getByRole("heading", { name: "Copper" })).toBeVisible()
   await expect(page.getByRole("heading", { name: "HDPE" })).toHaveCount(0)
 
-  await page.getByLabel("Material").selectOption("aluminium")
+  await page.getByRole("combobox").selectOption("aluminium")
   await page.getByLabel("Weight (kg)").fill("2")
   await expect(page.getByText(/28,00/)).toBeVisible()
 })
