@@ -1,4 +1,5 @@
 import { BACON_NACHOS_RECIPE } from "@/lib/recipe-bacon-nachos"
+import { BACON_CHICKEN_ROLLS_RECIPE } from "@/lib/recipe-bacon-chicken-rolls"
 
 export type RecipeStatus = "draft" | "published" | "archived"
 
@@ -1616,6 +1617,7 @@ export const SAMPLE_RECIPES: RecipeCreatePayload[] = [
     ],
   },
   BACON_NACHOS_RECIPE,
+  BACON_CHICKEN_ROLLS_RECIPE,
 ]
 
 export function normalizeRecipeTitleKey(title: string): string {
