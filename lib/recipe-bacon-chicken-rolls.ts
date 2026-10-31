@@ -5,12 +5,12 @@ import type { RecipeCreatePayload } from "@/lib/recipes"
 export const BACON_CHICKEN_ROLLS_RECIPE: RecipeCreatePayload = {
   status: "published",
   audienceUserIds: ["hans", "irma"],
-  titleEn: "Mustard-Free Three-Cheese Bacon Chicken Rolls",
-  titleAf: "Spek-en-driekaas-hoenderrolletjies sonder mosterd",
+  titleEn: "Mustard-Free Bacon and Cheese Chicken Rolls",
+  titleAf: "Spek-en-kaas-hoenderrolletjies sonder mosterd",
   summaryEn:
-    "Bacon-wrapped chicken filled with Gouda, cheddar, a little feta and thyme, sliced into toasted bread rolls with roasted tomatoes. Optional onion and green pepper are sautéed for the filling; baby marrow is an optional side. For a simpler filling use about 80 g of Gouda, cheddar or mozzarella; replace the feta with a little goat's cheese if preferred. Swap thyme for oregano. Do not add salt to the cheese filling. For mustard allergy, check bacon, rolls, cheese and seasonings; if spices or flavourings are unclear, confirm with the maker or choose a plain alternative.",
+    "Bacon-wrapped chicken filled with cheddar, a little feta and thyme, sliced into toasted bread rolls with roasted tomatoes. Optional onion and green pepper are sautéed for the filling; baby marrow is an optional side. Gouda or mozzarella can replace the cheddar; a little goat's cheese can replace the feta. Swap thyme for oregano. Do not add salt to the cheese filling. For mustard allergy, check bacon, rolls, cheese and seasonings; if spices or flavourings are unclear, confirm with the maker or choose a plain alternative.",
   summaryAf:
-    "Hoender met Gouda, cheddar, 'n bietjie feta en tiemie, in spek toegedraai en in geroosterde broodrolletjies met oondgeroosterde tamaties bedien. Opsionele ui en groen soetrissie word vir die vulsel gebraai; murgpampoentjies is 'n opsionele bykos. Gebruik vir 'n eenvoudiger vulsel sowat 80 g Gouda, cheddar of mozzarella; vervang die feta met 'n bietjie bokkaas indien verkies. Vervang tiemie met origanum. Moenie sout by die kaasvulsel voeg nie. Vir mosterdallergie: gaan spek, broodrolletjies, kaas en geurmiddels na; vra die vervaardiger oor onduidelike speserye of geurmiddels, of kies 'n eenvoudige alternatief.",
+    "Hoender met cheddar, 'n bietjie feta en tiemie, in spek toegedraai en in geroosterde broodrolletjies met oondgeroosterde tamaties bedien. Opsionele ui en groen soetrissie word vir die vulsel gebraai; murgpampoentjies is 'n opsionele bykos. Gouda of mozzarella kan die cheddar vervang; 'n bietjie bokkaas kan die feta vervang. Vervang tiemie met origanum. Moenie sout by die kaasvulsel voeg nie. Vir mosterdallergie: gaan spek, broodrolletjies, kaas en geurmiddels na; vra die vervaardiger oor onduidelike speserye of geurmiddels, of kies 'n eenvoudige alternatief.",
   servings: 2,
   prepMinutes: 15,
   cookMinutes: 40,
@@ -27,8 +27,7 @@ export const BACON_CHICKEN_ROLLS_RECIPE: RecipeCreatePayload = {
   },
   ingredients: [
     { name: "Skinless boneless chicken breasts", quantity: 2 },
-    { name: "Gouda", quantity: 40, unit: "g, grated" },
-    { name: "Cheddar", quantity: 30, unit: "g, grated" },
+    { name: "Cheddar", quantity: 70, unit: "g, grated; or Gouda or mozzarella" },
     { name: "Feta", quantity: "10-15", unit: "g, crumbled" },
     { name: "Fresh thyme", quantity: 1, unit: "tsp leaves; or 1/2 tsp dried oregano" },
     { name: "Bacon", quantity: 4, unit: "rashers; check label for mustard" },
@@ -59,9 +58,9 @@ export const BACON_CHICKEN_ROLLS_RECIPE: RecipeCreatePayload = {
       order: 3,
       timerMinutes: 40,
       instructionEn:
-        "Toss the tomatoes, and the baby marrow if using, with half the oil. Arrange around the chicken. Roast for 35 to 40 minutes, until the thickest part of the chicken reaches 74°C and the bacon is cooked. Rest the chicken for 5 minutes.",
+        "Toss the tomatoes, and the baby marrow if using, with half the oil. Arrange around the chicken. Roast for 35 to 40 minutes, until a food thermometer shows 74°C in the thickest part of the chicken and the centre of the cheese filling in each breast, and the bacon is cooked. Rest the chicken for 5 minutes.",
       instructionAf:
-        "Meng die tamaties, en die murgpampoentjie indien gebruik, met die helfte van die olie. Pak dit om die hoender. Oondrooster 35 tot 40 minute totdat die dikste deel van die hoender 74°C bereik en die spek gaar is. Laat die hoender 5 minute rus.",
+        "Meng die tamaties, en die murgpampoentjie indien gebruik, met die helfte van die olie. Pak dit om die hoender. Oondrooster 35 tot 40 minute totdat 'n kostermometer 74°C in die dikste deel van die hoender en die middel van die kaasvulsel in elke borsie wys, en die spek gaar is. Laat die hoender 5 minute rus.",
     },
     {
       order: 4,

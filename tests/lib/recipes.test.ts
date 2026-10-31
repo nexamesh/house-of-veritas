@@ -74,7 +74,7 @@ describe("sample recipe catalog", () => {
 
   it("includes mustard-free bacon chicken rolls with optional onion and green pepper", () => {
     const recipe = SAMPLE_RECIPES.find((item) =>
-      item.titleEn === "Mustard-Free Three-Cheese Bacon Chicken Rolls"
+      item.titleEn === "Mustard-Free Bacon and Cheese Chicken Rolls"
     )
 
     expect(recipe?.status).toBe("published")
@@ -85,12 +85,14 @@ describe("sample recipe catalog", () => {
     expect(recipe?.ingredients.find((item) => item.name === "Onion")?.unit).toContain("optional")
     expect(recipe?.ingredients.find((item) => item.name === "Green pepper")?.unit).toContain("optional")
     expect(recipe?.ingredients.map((item) => item.name)).toEqual(
-      expect.arrayContaining(["Gouda", "Cheddar", "Feta"])
+      expect.arrayContaining(["Cheddar", "Feta"])
     )
     expect(recipe?.summaryEn).toContain("goat's cheese")
     expect(recipe?.summaryEn?.toLowerCase()).toContain("mustard")
     expect(recipe?.summaryAf?.toLowerCase()).toContain("mosterd")
     expect(recipe?.steps.some((step) => step.instructionEn.includes("74°C"))).toBe(true)
+    expect(recipe?.steps.some((step) => step.instructionEn.includes("centre of the cheese filling"))).toBe(true)
+    expect(recipe?.steps.some((step) => step.instructionAf.includes("middel van die kaasvulsel"))).toBe(true)
     expect(recipe?.steps.every((step) => step.instructionEn.trim() && step.instructionAf.trim())).toBe(true)
     expect(recipe?.image.url).toBe("/images/recipes/bacon-chicken-rolls.webp")
   })
